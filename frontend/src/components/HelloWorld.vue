@@ -30,10 +30,10 @@ import axios from 'axios';
 const catName = ref("");
 
 function getCatName(){
-  const date = "11/17"
+  const date = "11-17"
   axios.get(`http://localhost:8000/cat-name?date=${date}`)
   .then(function(res){
-    console.log(res.data)
+    catName.value = res.data
 
   })
   
