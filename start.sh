@@ -1,0 +1,1 @@
+docker build -t cat-album . && docker run cat-album
