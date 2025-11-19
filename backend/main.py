@@ -1,7 +1,20 @@
 from typing import Union
 from fastapi.middleware.cors import CORSMiddleware
 
-from fastapi import FastAPI
+
+from fastapi import FastAPI, File, UploadFile
+
+app = FastAPI()
+
+
+@app.post("/files/")
+async def create_file(file: bytes = File()):
+    return {"file_size": len(file)}
+
+
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile):
+    return {"filename": file.filename}
 from llm2server import cat_recognize
 
 app = FastAPI()
@@ -36,7 +49,8 @@ def get_cat_name(date:str):
         return "小白"
     return cat_names[date]
 
-@app.get("/cat-breed") #实际应该是个post请求
-def get_cat_breed():
-    cat_breed=cat_recognize()
+@app.post("/cat-breed",) 
+async def get_cat_breed(catImg:UploadFile=File(...)) -> str:
+
+    cat_breed=await cat_recognize(catImg)
     return cat_breed

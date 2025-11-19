@@ -1,25 +1,34 @@
 <template>
   <v-container class="fill-height" max-width="900">
-    <v-card
-    class="mx-auto"
-    prepend-icon="$vuetify"
-    width="400"
-  >
-    <template v-slot:title>
-      <span class="font-weight-black">Get Today's Cats Name</span>
-    </template>
+    <v-card class="mx-auto" prepend-icon="$vuetify" width="400">
+      <template v-slot:title>
+        <span class="font-weight-black">Get Today's Cats Name</span>
+      </template>
 
-    <v-card-text class="bg-surface-light pt-4">
+      <v-card-text class="bg-surface-light pt-4">
 
-      <v-btn @click="getCatName" v-if="catName===''">
-        Get!
-      </v-btn>
+        <v-btn @click="getCatName" v-if="catName===''">
+          Get!
+        </v-btn>
 
-      <v-chip class="ml-1" v-if="catName!==''">
-        {{catName}}
-      </v-chip>
-    </v-card-text>
-  </v-card>
+        <v-chip class="ml-1" v-if="catName!==''">
+          {{catName}}
+        </v-chip>
+      </v-card-text>
+    </v-card>
+    <!--↑猫名   ↓猫种类-->
+    <v-card class="mx-auto" prepend-icon="$vuetify" width="400">
+      <template v-slot:title>
+        <span class="font-weight-black">Get Cats' Breed</span>
+    
+      </template>
+
+      <v-card-text class="bg-surface-light pt-4">
+        <v-form>
+          <v-file-input @change="postCatImg" label="File input" density="compact"></v-file-input>
+        </v-form>
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
@@ -29,14 +38,30 @@ import { ref } from 'vue'
 import axios from 'axios';
 const catName = ref("");
 
+const catBreed = ref("");
+
 function getCatName(){
   const date = "11-17"
   axios.get(`http://localhost:8000/cat-name?date=${date}`)
   .then(function(res){
     catName.value = res.data
-
   })
-  
+}
+
+
+function postCatImg(e: any){
+  if (!e.target.files){
+    console.log("没有文件嗷")
+    return
+  }
+  const formData =  new FormData()
+  let catImg = e.target.files[0]
+  formData.append('catImg',catImg)
+  axios.post(`http://localhost:8000/cat-breed`, formData,{
+  }).then(function(res){
+    catBreed.value=res.data
+    console.log(catBreed.value)
+  })
 }
 
 </script>
