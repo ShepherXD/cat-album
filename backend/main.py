@@ -2,6 +2,7 @@ from typing import Union
 from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi import FastAPI
+from llm2server import cat_recognize
 
 app = FastAPI()
 app.add_middleware(
@@ -34,3 +35,8 @@ def get_cat_name(date:str):
     if date not in cat_names:
         return "小白"
     return cat_names[date]
+
+@app.get("/cat-breed") #实际应该是个post请求
+def get_cat_breed():
+    cat_breed=cat_recognize()
+    return cat_breed

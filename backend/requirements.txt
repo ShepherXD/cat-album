@@ -2,4 +2,4 @@ fastapi == 0.121
 fastapi[standard] == 0.121
 sqlmodel == 0.0.27
 flask
-
+google-genai == 1.51.0
