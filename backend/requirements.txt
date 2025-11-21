@@ -1,6 +1,8 @@
 fastapi == 0.121
 fastapi[standard] == 0.121
 sqlmodel == 0.0.27
-flask
 google-genai == 1.51.0
 sqlmodel == 0.0.27
+boto3 == 1.41
+python-multipart == 0.0.20
+python-dotenv == 1.2.1
