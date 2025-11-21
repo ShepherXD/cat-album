@@ -377,3 +377,5 @@ test/
 
 .pnpm-store
 **/.pnpm-store
+
+cat-img
