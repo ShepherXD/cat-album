@@ -3,31 +3,36 @@
         <v-row>
             <v-col v-for="(cat,index) in cats" :key="index" cols="12" md="6">
                 <v-card class="mx-auto" :cat="cat">
-                    <v-card-item>
+                    
                         <v-img
                         class="align-end text-white"
                         height="300"
                         :src=cat.img
                         cover>
-                        <v-card-title>
-                            12345
-                        </v-card-title>
                         </v-img>
 
-                        <v-card-subtitle class="pt-4">
-                        {{ cat.breed }}
-                        </v-card-subtitle>
+                        <div class="d-flex align-center pa-3"> 
+    
+                            <v-card-title class="text-h5 pa-0 mr-4">
+                                {{ cat.name }}
+                            </v-card-title>
 
-                        <v-card-text >
+                            <v-card-subtitle class="text-subtitle-1">
+                                {{cat.breed}}
+                            </v-card-subtitle>
+
+                        </div>
+
+                        <v-card-text class="py-0">
                             <div class="text-truncate" style="max-width: 300;">
                                 {{cat.note}}
                             </div>
                         </v-card-text>
 
-                        <v-card-actions>
-                        <v-btn color="orange" text="Edit"></v-btn>
+                        <v-card-actions class="d-flex justify-end">
+                        <v-btn  color="orange" text="Edit"></v-btn>
                         </v-card-actions>
-                    </v-card-item>
+                    
 
                 </v-card>
             </v-col>
