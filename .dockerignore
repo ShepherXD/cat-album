@@ -375,3 +375,4 @@ docs/_book
 test/
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,node,vue,python,macos
+*.db
