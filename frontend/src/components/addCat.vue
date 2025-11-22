@@ -27,15 +27,29 @@
   </v-main>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref,onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import ModifyCatInfo from './modifyCatInfo.vue'
+import axios from 'axios'
 import type { Cat } from './catAlbum.vue'
 import { tempUploadStore,clearTempFile } from '@/utils/store'
 
 const router = useRouter()
 const openEdit = ref<Boolean>(false)
 const currCat = ref<Cat>({})
+const taskid = ref<number>()
+
+onMounted (() => {
+  const catImg = tempUploadStore.file
+  if(catImg) {
+    const formData = new FormData()
+    formData.append('image',catImg)
+    axios.put('http://localhost:8000/cat', formData,{
+    }).then(function(res){
+        console.log(res.data)
+    }).catch(error => { console.log(error) })
+  }
+})
 
 const goBack = () => {
 clearTempFile()
@@ -54,6 +68,7 @@ const save = (currCat: Cat, index) => {
     clearTempFile()
     router.back()
 }
+
 
 </script>
 <style scoped>
