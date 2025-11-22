@@ -9,11 +9,9 @@ load_dotenv()
 # print(os.environ.get("NEKO"))dock
 # image_path = input("请输入图片文件路径：")
 
-async def cat_recognize(catImg): #！！要传入接收到的图片（64编码？
+def cat_recognize(image_data): #！！要传入接收到的图片（64编码？
     # image_path="/app/cat-img/shiro.jpg"
 
-
-    image_data = await catImg.read()
 
     prompt= '''
     你是一个猫专家，能通过猫的样子识别出猫的种类。你的工作是通过用户上传的猫照片用日语回答图中的猫是什么品种。如果你无法十分确定答案，则回答一个你认为最有可能的品种。
@@ -23,7 +21,8 @@ async def cat_recognize(catImg): #！！要传入接收到的图片（64编码�
     client=genai.Client()
     try:
         response=client.models.generate_content(
-            model="gemini-2.5-flash", 
+            # model="gemini-2.5-flash", 
+            model="gemini-2.5-pro",
             config=types.GenerateContentConfig(
                 system_instruction=prompt
             ),
