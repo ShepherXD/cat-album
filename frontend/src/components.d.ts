@@ -13,6 +13,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     CatAlbum: typeof import('./components/catAlbum.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    ModifyCatInfo: typeof import('./components/modifyCatInfo.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
