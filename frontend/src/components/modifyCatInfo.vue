@@ -2,7 +2,7 @@
 
                     <v-sheet color="surface-light" rounded="0" class="h-100 d-flex">
                         <v-card class="mx-auto flex-grow-1" rounded="0" >
-                            <!--组件复用，父组件应传入update或add字段做区分 Update|Add Cat Info-->>
+                            <!--组件复用，父组件应传入update或add字段做区分 Update|Add Cat Info-->
                             <v-card-title class="d-flex justify-center pt-8" >Edit Cat Info</v-card-title>
                                 <v-card-text style="padding:2vh 10vw" >
                                     <div class="text-subtitle-1 text-medium-emphasis">Name</div>
