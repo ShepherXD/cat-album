@@ -16,7 +16,7 @@
         </v-chip>
       </v-card-text>
     </v-card>
-    <!--↑猫名   ↓猫种类-->
+
     <v-card class="mx-auto" prepend-icon="$vuetify" width="400">
       <template v-slot:title>
         <span class="font-weight-black">Get Cats' Breed</span>

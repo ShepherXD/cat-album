@@ -1,13 +1,11 @@
 <template>
-    <v-card class="mx-auto pb-8">
-        <v-app-bar color="teal-lighten-2"  >
+        <v-app-bar color="teal-lighten-2" app>
             <v-app-bar-nav-icon></v-app-bar-nav-icon>
             <v-toolbar-title color="white">My Cat Album</v-toolbar-title>
             <v-btn icon="mdi-magnify"></v-btn>
         </v-app-bar>
-            <v-layout>
-            <v-main>
-                <v-container>
+        <v-main class="pb-8">
+                <v-container class="pa-6">
                     <v-row>
                         <v-col v-for="(cat,index) in cats" :key="index" cols="12" md="6">
                             <!-- 猫猫卡片 -->
@@ -39,15 +37,13 @@
                                         </v-card-actions>
 
                                         <v-overlay v-model="openModify[index]" class="align-center justify-center" scroll-strategy="block">
-                                            <v-card width="90vw">
+                                            <v-card width="90vw" max-width="800px" rounded="lg">
                                                     <ModifyCatInfo
-                                                        :initial-cat="cat"
+                                                        :initialCat="cat"
                                                         @submit="(modifiedCat)=>save(modifiedCat,index)"
                                                         @close="openModify[index]=false"
                                                     />
-                                                <!-- <v-btn color="success" @click="openModify[index]=false">
-                                                        close
-                                                    </v-btn> -->
+
                                             </v-card>
                                         </v-overlay>
 
@@ -63,21 +59,19 @@
                         </v-col>
                     </v-row>
                 </v-container>    
-            </v-main>
-            <!-- 隐藏的上传 -->
+                 <!-- 隐藏的上传 -->
             <input  type="file" ref="fileInput"  style="display: none" accept="image/*" @change="onFileSelected">
             <!-- 相机&从相册添加按钮 -->
             <v-fab size="large" icon style="position:fixed;bottom: 40px; right: 20px;" z-index="1000" color="light-blue-lighten-1" >
                     <v-icon icon="mdi-camera" color="white"></v-icon>
                     <v-speed-dial v-model="openCameraList" location="top center" transition="slide-y-transition" activator="parent">
-                            <v-btn  color="cyan-lighten-1" icon @click="triggerFileSelected">
+                            <v-btn  color="cyan-lighten-1" key="add-btn" icon @click="triggerFileSelected">
                                 <v-icon size="24" color="white"  icon="mdi-plus"></v-icon>
                             </v-btn>
                         </v-speed-dial>
             </v-fab>
-        
-        </v-layout>
-    </v-card>
+        </v-main>    
+ 
 </template>
 
 <script setup lang="ts">
@@ -86,6 +80,7 @@ import axios from 'axios'
 import ModifyCatInfo from './modifyCatInfo.vue'
 import {useRouter} from 'vue-router'
 import {setTempFile} from '@/utils/store'
+
 const router = useRouter()
 const fileInput = ref<HTMLInputElement | null>(null)
 const openCameraList = ref(false)
@@ -95,17 +90,11 @@ const cats = ref<Cat[]>([
     {name:'黑黑', breed:'黑猫', rem:'特别特别乖的宝宝Q3Q', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585596325072958/6d0006bc62ba976b2b94800833bf8902.jpg?ex=69215462&is=692002e2&hm=80c7979324c803ccea45552c7717944d4d2dd99f8b2b60e68bfdb605a010de18&=&format=webp&width=581&height=653'},
     {name:'小白', breed:'美国短毛猫', rem:'猪~', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585595574550598/f569af35cfa5d9e5d5b12a4daeb41bb9.jpg?ex=69215462&is=692002e2&hm=3859594e52dab32e87c2aaedb610e2321e22a611db32b014823d2b71ea1490e1&=&format=webp&width=869&height=653'}
 ])
-// const currCat = ref<Cat | null>(null)
-// const open = (cat: Cat, index) => {
-//     currCat.value = cat
-//     openModify[index] = true
-//     console.log('开始修理猫猫')
-// }
-const save = (modifiedCat: Cat, index) => {
-    cats.value[index] = modifiedCat
-    openModify.value[index] = false
-    console.log('Modify Success!')
+
+const triggerFileSelected = () => {
+    fileInput.value.click()
 }
+
 const onFileSelected = (e: any) => {
     const selectedFile = e.target.files[0]
     if (selectedFile) {
@@ -114,14 +103,17 @@ const onFileSelected = (e: any) => {
         e.target.value = ''
     }
 }
-const triggerFileSelected = () => {
-    fileInput.value.click()
+
+const save = (modifiedCat: Cat, index) => {
+    cats.value[index] = modifiedCat
+    openModify.value[index] = false
+    console.log('Modify Success!')
 }
 export interface Cat {
     id?: number | string; 
     name: string;
     breed: string;
-    remark: string;
+    remark?: string;
     img: string;
 }
 </script>

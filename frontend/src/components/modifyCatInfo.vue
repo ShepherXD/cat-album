@@ -1,9 +1,9 @@
 <template>
 
-                    <v-sheet color="surface-light" rounded="lg">
-                        <v-card class="mx-auto" rounded="lg" >
-                            <v-card-title class="d-flex justify-center" >Update Cat Info</v-card-title>
-                                <v-card-text style="padding:0.5rem 1rem">
+                    <v-sheet color="surface-light" rounded="0" class="h-100 d-flex">
+                        <v-card class="mx-auto flex-grow-1" rounded="0" >
+                            <v-card-title class="d-flex justify-center pt-8" >Update Cat Info</v-card-title>
+                                <v-card-text style="padding:2vh 10vw" >
                                     <div class="text-subtitle-1 text-medium-emphasis">Name</div>
 
                                         <v-text-field
@@ -39,16 +39,10 @@
                                             prepend-inner-icon="mdi-rodent"
                                             variant="outlined"
                                         ></v-text-field>
-                                    <!-- <v-text-field
-                                    v-model="proxyModel.value"
-                                    label="Name"
-                                    prepend-icon="$vuetify"
-                                    variant="outlined"
-                                    ></v-text-field> -->
                                 </v-card-text>
                                 <v-divider></v-divider>
 
-                                    <v-card-actions>
+                                    <v-card-actions class="py-8" style="padding-left: 10vw; padding-right: 10vw">
                                         <v-btn  variant="text" color="deep-orange-lighten-2" @click="$emit('close')">cancel</v-btn>
                                         <v-btn class="flex-grow-1" color="teal-lighten-2" variant="tonal" @click="confirm">save</v-btn>
                                     </v-card-actions>
@@ -62,7 +56,7 @@
 import {ref,watch} from 'vue'
 import type { Cat } from './catAlbum.vue'
 const props = defineProps<{
-    initialCat: Cat
+    initialCat: Cat | null
 }>()
 console.log('收到的猫:', props.initialCat)
 const emit = defineEmits(['close','submit'])
