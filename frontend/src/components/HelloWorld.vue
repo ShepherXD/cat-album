@@ -40,7 +40,7 @@ const catName = ref("");
 
 const catBreed = ref("");
 
-function getCatName(){
+const getCatName = () => {
   const date = "11-17"
   axios.get(`http://localhost:8000/cat-name?date=${date}`)
   .then(function(res){
@@ -49,7 +49,7 @@ function getCatName(){
 }
 
 
-function postCatImg(e: any){
+const postCatImg = (e: any) =>{
   if (!e.target.files){
     console.log("没有文件嗷")
     return

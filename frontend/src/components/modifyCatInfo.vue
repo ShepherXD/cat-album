@@ -30,10 +30,10 @@
                                             variant="outlined"
                                         ></v-text-field>
 
-                                        <div class="text-subtitle-1 text-medium-emphasis">Note</div>
+                                        <div class="text-subtitle-1 text-medium-emphasis">Remark</div>
 
                                         <v-text-field
-                                            v-model="currCat.note"
+                                            v-model="currCat.remark"
                                             density="compact"
                                             placeholder="Cat's habbit or whatever you want to express"
                                             prepend-inner-icon="mdi-rodent"

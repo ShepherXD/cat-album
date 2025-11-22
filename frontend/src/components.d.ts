@@ -11,6 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AddCat: typeof import('./components/addCat.vue')['default']
     CatAlbum: typeof import('./components/catAlbum.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     ModifyCatInfo: typeof import('./components/modifyCatInfo.vue')['default']

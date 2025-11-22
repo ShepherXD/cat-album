@@ -56,7 +56,7 @@
 
                                     <v-card-text class="py-0">
                                         <div class="text-truncate" style="max-width: 300;">
-                                            {{cat.note}}
+                                            {{cat.rem}}
                                         </div>
                                     </v-card-text>
                             </v-card>
@@ -64,11 +64,13 @@
                     </v-row>
                 </v-container>    
             </v-main>
+            <!-- 隐藏的上传 -->
+            <input  type="file" ref="fileInput"  style="display: none" accept="image/*" @change="onFileSelected">
             <!-- 相机&从相册添加按钮 -->
             <v-fab size="large" icon style="position:fixed;bottom: 40px; right: 20px;" z-index="1000" color="light-blue-lighten-1" >
                     <v-icon icon="mdi-camera" color="white"></v-icon>
                     <v-speed-dial v-model="openCameraList" location="top center" transition="slide-y-transition" activator="parent">
-                            <v-btn  color="cyan-lighten-1" icon>
+                            <v-btn  color="cyan-lighten-1" icon @click="triggerFileSelected">
                                 <v-icon size="24" color="white"  icon="mdi-plus"></v-icon>
                             </v-btn>
                         </v-speed-dial>
@@ -82,12 +84,16 @@
 import {ref} from 'vue'
 import axios from 'axios'
 import ModifyCatInfo from './modifyCatInfo.vue'
+import {useRouter} from 'vue-router'
+import {setTempFile} from '@/utils/store'
+const router = useRouter()
+const fileInput = ref<HTMLInputElement | null>(null)
 const openCameraList = ref(false)
-const openModify = ref({})
+const openModify = ref<Boolean[]>({})
 const cats = ref<Cat[]>([
-    {name:'花花', breed:'狸花猫', note:'喜欢咬塑料袋 粘人 可以抱着睡觉wwwwwwwwwwwwwwwwwwwwwwww!', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585595901710366/ee348036bb4ea8951505f81b7eededdf.jpg?ex=69215462&is=692002e2&hm=0b58ebab5dc6b6b18826391b0d355de4cce87a8832d0f156f4b92cb2b32dea92&=&format=webp&width=629&height=653'},
-    {name:'黑黑', breed:'黑猫', note:'特别特别乖的宝宝Q3Q', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585596325072958/6d0006bc62ba976b2b94800833bf8902.jpg?ex=69215462&is=692002e2&hm=80c7979324c803ccea45552c7717944d4d2dd99f8b2b60e68bfdb605a010de18&=&format=webp&width=581&height=653'},
-    {name:'小白', breed:'美国短毛猫', note:'猪~', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585595574550598/f569af35cfa5d9e5d5b12a4daeb41bb9.jpg?ex=69215462&is=692002e2&hm=3859594e52dab32e87c2aaedb610e2321e22a611db32b014823d2b71ea1490e1&=&format=webp&width=869&height=653'}
+    {name:'花花', breed:'狸花猫', rem:'喜欢咬塑料袋 粘人 可以抱着睡觉wwwwwwwwwwwwwwwwwwwwwwww!', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585595901710366/ee348036bb4ea8951505f81b7eededdf.jpg?ex=69215462&is=692002e2&hm=0b58ebab5dc6b6b18826391b0d355de4cce87a8832d0f156f4b92cb2b32dea92&=&format=webp&width=629&height=653'},
+    {name:'黑黑', breed:'黑猫', rem:'特别特别乖的宝宝Q3Q', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585596325072958/6d0006bc62ba976b2b94800833bf8902.jpg?ex=69215462&is=692002e2&hm=80c7979324c803ccea45552c7717944d4d2dd99f8b2b60e68bfdb605a010de18&=&format=webp&width=581&height=653'},
+    {name:'小白', breed:'美国短毛猫', rem:'猪~', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585595574550598/f569af35cfa5d9e5d5b12a4daeb41bb9.jpg?ex=69215462&is=692002e2&hm=3859594e52dab32e87c2aaedb610e2321e22a611db32b014823d2b71ea1490e1&=&format=webp&width=869&height=653'}
 ])
 // const currCat = ref<Cat | null>(null)
 // const open = (cat: Cat, index) => {
@@ -100,11 +106,22 @@ const save = (modifiedCat: Cat, index) => {
     openModify.value[index] = false
     console.log('Modify Success!')
 }
+const onFileSelected = (e: any) => {
+    const selectedFile = e.target.files[0]
+    if (selectedFile) {
+        setTempFile(selectedFile)
+        router.push('/add-cat')
+        e.target.value = ''
+    }
+}
+const triggerFileSelected = () => {
+    fileInput.value.click()
+}
 export interface Cat {
     id?: number | string; 
     name: string;
     breed: string;
-    note: string;
+    remark: string;
     img: string;
 }
 </script>
