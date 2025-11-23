@@ -41,7 +41,7 @@ def cat_recognize(image_data): #！！要传入接收到的图片（64编码？
 
     2.If the photo appears to be an illustration or cartoon character and not a photograph of a real cat, classify it as how you recognized it.
 
-    Example: <breed>Illust Cat</breed>, <breed>Cat girl(character)</breed>... and so on.
+    Example: <breed>Illust Cat</breed>, <breed>Cat girl</breed>... and so on.
     '''
     client=genai.Client()
     try:
@@ -71,7 +71,8 @@ def cat_recognize(image_data): #！！要传入接收到的图片（64编码？
         return breed
     except errors.ServerError as e:
         print(f"服务器拥挤:{str(e)}")
-        raise Exception("Gemini API is not available right now, please try again later.")
+        raise Exception("Gemini API is overloaded, please try again later.")
     except errors.APIError as e:
         print(f"已达到API使用上限：{str(e)}")
         raise Exception("API usage limit reached, please try again later.")
+ 
