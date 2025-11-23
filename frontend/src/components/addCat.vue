@@ -11,7 +11,7 @@
         height="60vh">
         <v-progress-linear :active="isLoading" :indeterminate="isLoading" color="cyan-darken-1" height="6" absolute location="top" ></v-progress-linear>
         <v-img :src="tempUploadStore.preview"
-                width="auto" max-width="100%" max-height="90%"></v-img>
+                cover></v-img>
         <v-snackbar v-model="openSnackBar"   color="teal" rounded="pill" min-width="auto" max-width="80vw" absolute location="top">
           <strong class="text-truncate">Cat's Breed: {{ currCat.breed }}</strong>
         </v-snackbar>

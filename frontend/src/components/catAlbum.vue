@@ -4,8 +4,8 @@
             <v-toolbar-title color="white">My Cat Album</v-toolbar-title>
             <v-btn icon="mdi-magnify"></v-btn>
         </v-app-bar>
-        <v-main class="pb-8">
-                <v-container class="pa-6">
+        <v-main class="pb-8" style="padding-top: 32px;">
+                <v-container class="px-3">
                     <v-row v-show="showMode.isCard">
                         <v-col v-for="(cat,index) in cats" :key="cat.id" cols="12" sm="6" md="4">
                             <!-- 猫猫卡片 -->
@@ -69,13 +69,13 @@
                         </v-col>
                     </v-row>
                     <v-row v-show="showMode.isGallery">
-                        <v-col v-for="(cat, index) in cats" :key="cat.id" cols="4" sm="3" md="2" class="pa-1">
+                        <v-col v-for="(cat, index) in cats" :key="cat.id" cols="4" sm="3" md="2" class="pa-0">
                             <v-img
                             :src="cat.image_url"
                             @click="showImg(index)"
                             aspect-ratio="1"
                             cover
-                            class="bg-grey-lighten-2 rounded-lg cursor-pointer">
+                            class="bg-grey-lighten-2 cursor-pointer">
                          
                                 <template v-slot:placeholder>
                                     <div class="d-flex align-center justify-center fill-height">
@@ -104,6 +104,7 @@
             :visible="visible"
             :imgs="catImgUrls"
             :index="index"
+            rounded="0"
             @hide="hideImg"></VueEasyLightbox>
 </template>
 
