@@ -77,7 +77,7 @@ const polling = (id:number) => {
       } else if(status === 'FAILED'){
         isLoading.value = false
         clearInterval(timer)
-        alert('Analysis Failed')
+        alert('Analysis Failed. Please try again.')
       }
     })
   }, 1000)

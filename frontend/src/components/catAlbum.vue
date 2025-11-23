@@ -29,11 +29,11 @@
 
                                         <div class="d-flex align-center px-3 py-1"> 
                     
-                                            <v-card-title class="text-h6 pa-0 mr-4">
+                                            <v-card-title class="d-flex flex-shrink-0 text-h6 pa-0 mr-4">
                                                 {{ cat.name }}
                                             </v-card-title>
 
-                                            <v-card-subtitle class="text-subtitle-1 pa-0 text-truncate">
+                                            <v-card-subtitle class="d-flex flex-shrink-1 text-subtitle-1 pa-0 text-truncate">
                                                 {{cat.breed}}
                                             </v-card-subtitle>
 
@@ -41,7 +41,7 @@
                                             <!-- <v-spacer></v-spacer> -->
 
                                             <!-- 点击就打开改猫信息界面 -->
-                                            <v-card-actions class="d-flex flex-grow-1 justify-end pr-0">
+                                            <v-card-actions class="d-flex flex-grow-1 flex-shrink-0 justify-end pr-0">
                                                 <v-btn @click="openModify[cat.id]=true" color="teal-lighten-2" text="Edit"></v-btn>
                                             </v-card-actions>
 
@@ -55,8 +55,6 @@
 
                                                 </v-card>
                                             </v-overlay>
-
-
                                         </div>
 
                                         <v-card-text class="py-0">
