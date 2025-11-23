@@ -61,12 +61,17 @@ def cat_recognize(image_data): #！！要传入接收到的图片（64编码？
 
         result=response.text
         pattern=r"<breed>(.+)</breed>"
-        breed=re.search(pattern,result).group(1)
+        try:
+            breed=re.search(pattern,result).group(1)
+        except:
+            raise Exception("Gemini Response parsing error.")
+        if breed is None:
+            raise Exception("Gemini Response parsing error.")
         print(f" 猫的品种是： {breed} ")
         return breed
     except errors.ServerError as e:
         print(f"服务器拥挤:{str(e)}")
-        return "服务器拥挤，请稍后再试"
+        raise Exception("Gemini API is not available right now, please try again later.")
     except errors.APIError as e:
         print(f"已达到API使用上限：{str(e)}")
-        return "API用光啦，明天再来吧~"
+        raise Exception("API usage limit reached, please try again later.")
