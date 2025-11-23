@@ -6,11 +6,15 @@
   </v-app-bar>
 
   <v-main class="bg-black d-flex flex-column  overflow-hidden" style="height: 100vh">
-    <div class="flex-grow-1 d-flex align-center overflow-hidden justify-center w-100"
+    <div class="flex-grow-1 d-flex align-center overflow-hidden justify-center w-100 position-relative"
         :class="{'lifted':openEdit}"
         height="60vh">
+        <v-progress-linear :active="isLoading" :indeterminate="isLoading" color="cyan-darken-1" height="6" absolute location="top" ></v-progress-linear>
         <v-img :src="tempUploadStore.preview" 
                 width="auto" max-width="100%" max-height="90%"></v-img>
+        <v-snackbar v-model="openSnackBar" :timeout="2000"  color="teal" rounded="pill" absolute location="top">
+          Breed: {{ currCat.breed }}
+        </v-snackbar>
     </div>
     
     <div class="text-center pb-10 flex-shrink-0">
@@ -27,7 +31,7 @@
   </v-main>
 </template>
 <script setup lang="ts">
-import { ref,onMounted } from 'vue'
+import { ref,onMounted,onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import ModifyCatInfo from './modifyCatInfo.vue'
 import axios from 'axios'
@@ -37,7 +41,8 @@ import { tempUploadStore,clearTempFile } from '@/utils/store'
 const router = useRouter()
 const openEdit = ref<Boolean>(false)
 const currCat = ref<Cat>({})
-const taskid = ref<number>()
+const isLoading = ref<Boolean>(false)
+const openSnackBar = ref<Boolean>(false)
 
 onMounted (() => {
   const catImg = tempUploadStore.file
@@ -47,9 +52,36 @@ onMounted (() => {
     axios.put('http://localhost:8000/cat', formData,{
     }).then(function(res){
         console.log(res.data)
+        const taskid = res.data.analysis_task_id
+        if(taskid){
+          polling(taskid)
+        }
     }).catch(error => { console.log(error) })
   }
 })
+
+
+
+const polling = (id:number) => {
+  isLoading.value = true
+  const timer = setInterval(() => {
+    axios.get(`http://localhost:8000/cat-breed/task/${id}`)
+    .then(function(res){
+      const status = res.data.status
+      if(status === 'COMPLETED'){
+        currCat.value.breed = res.data.result
+        console.log(currCat.value.breed)
+        isLoading.value = false
+        openSnackBar.value = true
+        clearInterval(timer)
+      } else if(status === 'FAILED'){
+        isLoading.value = false
+        clearInterval(timer)
+        alert('Analysis Failed')
+      }
+    })
+  }, 1000)
+}
 
 const goBack = () => {
 clearTempFile()

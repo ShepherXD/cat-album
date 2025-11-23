@@ -7,14 +7,14 @@
         <v-main class="pb-8">
                 <v-container class="pa-6">
                     <v-row>
-                        <v-col v-for="(cat,index) in cats" :key="index" cols="12" md="6">
+                        <v-col v-for="(cat,index) in cats" :key="cat.id" cols="12" md="6">
                             <!-- 猫猫卡片 -->
                             <v-card class="mx-auto pa-4" :cat="cat">
                                 
                                     <v-img
                                     class="align-end text-white"
                                     height="300"
-                                    :src=cat.img
+                                    :src=cat.image_url
                                     cover>
                                     </v-img>
 
@@ -33,15 +33,15 @@
 
                                         <!-- 点击就打开改猫信息界面 -->
                                         <v-card-actions class="d-flex justify-end pr-0">
-                                            <v-btn @click="openModify[index]=true" color="teal-lighten-2" text="Edit"></v-btn>
+                                            <v-btn @click="openModify[cat.id]=true" color="teal-lighten-2" text="Edit"></v-btn>
                                         </v-card-actions>
 
-                                        <v-overlay v-model="openModify[index]" class="align-center justify-center" scroll-strategy="block">
+                                        <v-overlay v-model="openModify[cat.id]" class="align-center justify-center" scroll-strategy="block">
                                             <v-card width="90vw" max-width="800px" rounded="lg">
                                                     <ModifyCatInfo
                                                         :initialCat="cat"
                                                         @submit="(modifiedCat)=>save(modifiedCat,index)"
-                                                        @close="openModify[index]=false"
+                                                        @close="openModify[cat.id]=false"
                                                     />
 
                                             </v-card>
@@ -52,7 +52,7 @@
 
                                     <v-card-text class="py-0">
                                         <div class="text-truncate" style="max-width: 300;">
-                                            {{cat.rem}}
+                                            {{cat.remark}}
                                         </div>
                                     </v-card-text>
                             </v-card>
@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
+import {ref, onMounted} from 'vue'
 import axios from 'axios'
 import ModifyCatInfo from './modifyCatInfo.vue'
 import {useRouter} from 'vue-router'
@@ -85,11 +85,20 @@ const router = useRouter()
 const fileInput = ref<HTMLInputElement | null>(null)
 const openCameraList = ref(false)
 const openModify = ref<Boolean[]>({})
-const cats = ref<Cat[]>([
-    {name:'花花', breed:'狸花猫', rem:'喜欢咬塑料袋 粘人 可以抱着睡觉wwwwwwwwwwwwwwwwwwwwwwww!', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585595901710366/ee348036bb4ea8951505f81b7eededdf.jpg?ex=69215462&is=692002e2&hm=0b58ebab5dc6b6b18826391b0d355de4cce87a8832d0f156f4b92cb2b32dea92&=&format=webp&width=629&height=653'},
-    {name:'黑黑', breed:'黑猫', rem:'特别特别乖的宝宝Q3Q', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585596325072958/6d0006bc62ba976b2b94800833bf8902.jpg?ex=69215462&is=692002e2&hm=80c7979324c803ccea45552c7717944d4d2dd99f8b2b60e68bfdb605a010de18&=&format=webp&width=581&height=653'},
-    {name:'小白', breed:'美国短毛猫', rem:'猪~', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585595574550598/f569af35cfa5d9e5d5b12a4daeb41bb9.jpg?ex=69215462&is=692002e2&hm=3859594e52dab32e87c2aaedb610e2321e22a611db32b014823d2b71ea1490e1&=&format=webp&width=869&height=653'}
-])
+const cats = ref<Cat[]>([])
+// const cats = ref<Cat[]>([
+//     {name:'花花', breed:'狸花猫', rem:'喜欢咬塑料袋 粘人 可以抱着睡觉wwwwwwwwwwwwwwwwwwwwwwww!', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585595901710366/ee348036bb4ea8951505f81b7eededdf.jpg?ex=69215462&is=692002e2&hm=0b58ebab5dc6b6b18826391b0d355de4cce87a8832d0f156f4b92cb2b32dea92&=&format=webp&width=629&height=653'},
+//     {name:'黑黑', breed:'黑猫', rem:'特别特别乖的宝宝Q3Q', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585596325072958/6d0006bc62ba976b2b94800833bf8902.jpg?ex=69215462&is=692002e2&hm=80c7979324c803ccea45552c7717944d4d2dd99f8b2b60e68bfdb605a010de18&=&format=webp&width=581&height=653'},
+//     {name:'小白', breed:'美国短毛猫', rem:'猪~', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585595574550598/f569af35cfa5d9e5d5b12a4daeb41bb9.jpg?ex=69215462&is=692002e2&hm=3859594e52dab32e87c2aaedb610e2321e22a611db32b014823d2b71ea1490e1&=&format=webp&width=869&height=653'}
+// ])
+onMounted (() => {
+  axios.get(`http://localhost:8000/cat`)
+  .then(function(res){
+    cats.value = res.data
+    console.log('pull success')
+    console.log(cats.value[0].image_url)
+  })
+})
 
 const triggerFileSelected = () => {
     fileInput.value.click()
@@ -104,17 +113,25 @@ const onFileSelected = (e: any) => {
     }
 }
 
-const save = (modifiedCat: Cat, index) => {
+const save = (modifiedCat: Cat, index:number) => {
     cats.value[index] = modifiedCat
-    openModify.value[index] = false
-    console.log('Modify Success!')
+    openModify.value[modifiedCat.id] = false
+
+    const formData = new FormData()
+    formData.append('name', modifiedCat.name)
+    formData.append('breed', modifiedCat.breed)
+    formData.append('remark', modifiedCat.remark)
+    axios.patch(`http://localhost:8000/cat/${modifiedCat.id}`,formData,{
+    }).then(function(res){
+        console.log('Modify Success!,', res.data)
+    })
 }
 export interface Cat {
     id?: number | string; 
     name: string;
     breed: string;
     remark?: string;
-    img: string;
+    image_url: string;
 }
 </script>
 <style>
