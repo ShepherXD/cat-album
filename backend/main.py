@@ -37,9 +37,9 @@ s3 = boto3.client('s3',
 
 class Cat(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    name: str
-    breed: str
-    remark:str
+    name: Optional[str] = Field(default=None, index=True)
+    breed: Optional[str] = Field(default=None, index=True)
+    remark:Optional[str] = Field(default=None)
     image_url: str
     analysis_task_id: Optional[int] = Field(default=None, foreign_key="breed_analysis_task.id")
 
@@ -50,7 +50,7 @@ class TaskStatus(str, Enum):
     FAILED = "FAILED"
 
 class BreedAnalysisTask(SQLModel, table=True):
-    __tablename__ = "breed_analysis_task"
+    __tablename__ = "breed_analysis_task" # type: ignore
     id: Optional[int] = Field(default=None, primary_key=True)
     status: TaskStatus = Field(default=TaskStatus.IN_PROGRESS)
     result: Optional[str] = Field(default=None)# breed result when completed
