@@ -12,8 +12,8 @@
         <v-progress-linear :active="isLoading" :indeterminate="isLoading" color="cyan-darken-1" height="6" absolute location="top" ></v-progress-linear>
         <v-img :src="tempUploadStore.preview" 
                 width="auto" max-width="100%" max-height="90%"></v-img>
-        <v-snackbar v-model="openSnackBar" :timeout="3000"  color="teal" rounded="pill" content-class="text-center" absolute location="top">
-          <strong class="text-h6">Cat's Breed: {{ currCat.breed }}</strong>
+        <v-snackbar v-model="openSnackBar" :timeout="5000"  color="teal" rounded="pill" max-width="60vw" absolute location="top">
+          <strong class="text-h6 text-truncate">Cat's Breed: {{ currCat.breed }}</strong>
         </v-snackbar>
     </div>
     

@@ -16,6 +16,7 @@
                                         class="align-end text-white bg-grey-lighten-2"
                                         height="250"
                                         :src=cat.image_url
+                                        @click="showImg(index)"
                                         cover>
 
                                             <template v-slot:placeholder>
@@ -32,7 +33,7 @@
                                                 {{ cat.name }}
                                             </v-card-title>
 
-                                            <v-card-subtitle class="text-subtitle-1 pa-0">
+                                            <v-card-subtitle class="text-subtitle-1 pa-0 text-truncate">
                                                 {{cat.breed}}
                                             </v-card-subtitle>
 
@@ -73,6 +74,7 @@
                         <v-col v-for="(cat, index) in cats" :key="cat.id" cols="4" sm="3" md="2" class="pa-1">
                             <v-img
                             :src="cat.image_url"
+                            @click="showImg(index)"
                             aspect-ratio="1"
                             cover
                             class="bg-grey-lighten-2 rounded-lg cursor-pointer">
@@ -88,37 +90,48 @@
                     </v-row>
                 </v-container>    
                  <!-- 隐藏的上传 -->
-            <input  type="file" ref="fileInput"  style="display: none" accept="image/*" @change="onFileSelected">
+            <input type="file" ref="cameraInput" accept="image/*" capture="environment" style="display: none"  @change="onFileSelected">
+            <input  type="file" ref="fileInput" accept="image/png, image/jpeg, image/jpg" style="display: none" @change="onFileSelected">
             <!-- 相机&从相册添加按钮 -->
-            <v-fab size="large" icon style="position:fixed;bottom: 40px; right: 20px;" z-index="1000" color="light-blue-lighten-1" >
+            <v-fab size="large" @click="cameraInput.click()" icon style="position:fixed;bottom: 40px; right: 20px;" z-index="1000" color="light-blue-lighten-1" >
                     <v-icon icon="mdi-camera" color="white"></v-icon>
                     <v-speed-dial v-model="openCameraList" location="top center" transition="slide-y-transition" activator="parent">
-                            <v-btn  color="cyan-lighten-1" key="add-btn" icon @click="triggerFileSelected">
+                            <v-btn  color="cyan-lighten-1" key="add-btn" icon @click="fileInput.click()">
                                 <v-icon size="24" color="white"  icon="mdi-plus"></v-icon>
                             </v-btn>
                         </v-speed-dial>
             </v-fab>
         </v-main>    
- 
+        <VueEasyLightbox
+            :visible="visible"
+            :imgs="catImgUrls"
+            :index="index"
+            @hide="hideImg"></VueEasyLightbox>
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted} from 'vue'
+import {ref, onMounted,computed} from 'vue'
 import axios from 'axios'
 import ModifyCatInfo from './modifyCatInfo.vue'
 import {useRouter} from 'vue-router'
 import {setTempFile} from '@/utils/store'
-
+import VueEasyLightbox from 'vue-easy-lightbox'
 const router = useRouter()
 const showMode = ref<Object>({
     isGallery: false,
     isCard: true
 })
+const visible = ref<Boolean>(false)
+const index = ref<number>(0)
 const fileInput = ref<HTMLInputElement | null>(null)
+const cameraInput = ref<HTMLInputElement | null>(null)
 const isLoading = ref<Boolean>(true)
 const openCameraList = ref(false)
 const openModify = ref<Boolean[]>({})
 const cats = ref<Cat[]>([])
+const catImgUrls = computed(() => {
+    return cats.value.map(cat => cat.image_url)
+})
 // const cats = ref<Cat[]>([
 //     {name:'花花', breed:'狸花猫', rem:'喜欢咬塑料袋 粘人 可以抱着睡觉wwwwwwwwwwwwwwwwwwwwwwww!', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585595901710366/ee348036bb4ea8951505f81b7eededdf.jpg?ex=69215462&is=692002e2&hm=0b58ebab5dc6b6b18826391b0d355de4cce87a8832d0f156f4b92cb2b32dea92&=&format=webp&width=629&height=653'},
 //     {name:'黑黑', breed:'黑猫', rem:'特别特别乖的宝宝Q3Q', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585596325072958/6d0006bc62ba976b2b94800833bf8902.jpg?ex=69215462&is=692002e2&hm=80c7979324c803ccea45552c7717944d4d2dd99f8b2b60e68bfdb605a010de18&=&format=webp&width=581&height=653'},
@@ -134,11 +147,21 @@ onMounted (() => {
   })
 })
 
+
+
 const changeMode = () => {
     showMode.value.isCard = !showMode.value.isCard
     showMode.value.isGallery = !showMode.value.isGallery
 }
 
+const showImg = (i: number) => {
+    index.value = i
+    visible.value = true
+}
+
+const hideImg = () => {
+    visible.value = false
+}
 const triggerFileSelected = () => {
     fileInput.value.click()
 }
