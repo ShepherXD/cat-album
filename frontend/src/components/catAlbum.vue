@@ -1,61 +1,89 @@
 <template>
         <v-app-bar color="teal-lighten-2" app>
-            <v-app-bar-nav-icon></v-app-bar-nav-icon>
+            <v-app-bar-nav-icon @click="changeMode" :icon="showMode.isCard ? 'mdi-image-multiple' : 'mdi-card-multiple-outline'"></v-app-bar-nav-icon>
             <v-toolbar-title color="white">My Cat Album</v-toolbar-title>
             <v-btn icon="mdi-magnify"></v-btn>
         </v-app-bar>
         <v-main class="pb-8">
                 <v-container class="pa-6">
-                    <v-row>
-                        <v-col v-for="(cat,index) in cats" :key="cat.id" cols="12" md="6">
+                    <v-row v-show="showMode.isCard">
+                        <v-col v-for="(cat,index) in cats" :key="cat.id" cols="12" sm="6" md="4">
                             <!-- 猫猫卡片 -->
                             <v-card class="mx-auto pa-4" :cat="cat">
-                                
-                                    <v-img
-                                    class="align-end text-white"
-                                    height="300"
-                                    :src=cat.image_url
-                                    cover>
-                                    </v-img>
+                                <v-skeleton-loader :loading="isLoading" type="image, list-item-two-line">
+                                    <v-responsive>
+                                        <v-img
+                                        class="align-end text-white bg-grey-lighten-2"
+                                        height="250"
+                                        :src=cat.image_url
+                                        cover>
 
-                                    <div class="d-flex align-center px-3 py-1"> 
-                
-                                        <v-card-title class="text-h5 pa-0 mr-4">
-                                            {{ cat.name }}
-                                        </v-card-title>
+                                            <template v-slot:placeholder>
+                                                <div class="d-flex align-center justify-center fill-height">
+                                                    <v-progress-circular indeterminate color="grey-lighten-4"></v-progress-circular>
+                                                </div>
+                                            </template>
 
-                                        <v-card-subtitle class="text-subtitle-1">
-                                            {{cat.breed}}
-                                        </v-card-subtitle>
+                                        </v-img>
 
-                                        <!-- 占位元素 用来把button挤到右边 -->
-                                        <v-spacer></v-spacer>
+                                        <div class="d-flex align-center px-3 py-1"> 
+                    
+                                            <v-card-title class="text-h6 pa-0 mr-4">
+                                                {{ cat.name }}
+                                            </v-card-title>
 
-                                        <!-- 点击就打开改猫信息界面 -->
-                                        <v-card-actions class="d-flex justify-end pr-0">
-                                            <v-btn @click="openModify[cat.id]=true" color="teal-lighten-2" text="Edit"></v-btn>
-                                        </v-card-actions>
+                                            <v-card-subtitle class="text-subtitle-1 pa-0">
+                                                {{cat.breed}}
+                                            </v-card-subtitle>
 
-                                        <v-overlay v-model="openModify[cat.id]" class="align-center justify-center" scroll-strategy="block">
-                                            <v-card width="90vw" max-width="800px" rounded="lg">
-                                                    <ModifyCatInfo
-                                                        :initialCat="cat"
-                                                        @submit="(modifiedCat)=>save(modifiedCat,index)"
-                                                        @close="openModify[cat.id]=false"
-                                                    />
+                                            <!-- 占位元素 用来把button挤到右边 -->
+                                            <!-- <v-spacer></v-spacer> -->
 
-                                            </v-card>
-                                        </v-overlay>
+                                            <!-- 点击就打开改猫信息界面 -->
+                                            <v-card-actions class="d-flex flex-grow-1 justify-end pr-0">
+                                                <v-btn @click="openModify[cat.id]=true" color="teal-lighten-2" text="Edit"></v-btn>
+                                            </v-card-actions>
+
+                                            <v-overlay v-model="openModify[cat.id]" class="align-center justify-center" scroll-strategy="block">
+                                                <v-card width="90vw" max-width="800px" rounded="lg">
+                                                        <ModifyCatInfo
+                                                            :initialCat="cat"
+                                                            @submit="(modifiedCat)=>save(modifiedCat,index)"
+                                                            @close="openModify[cat.id]=false"
+                                                        />
+
+                                                </v-card>
+                                            </v-overlay>
 
 
-                                    </div>
-
-                                    <v-card-text class="py-0">
-                                        <div class="text-truncate" style="max-width: 300;">
-                                            {{cat.remark}}
                                         </div>
-                                    </v-card-text>
+
+                                        <v-card-text class="py-0">
+                                            <div class="text-truncate" style="max-width: 300;">
+                                                {{cat.remark}}
+                                            </div>
+                                        </v-card-text>
+                                    </v-responsive>
+                                </v-skeleton-loader>
+                                
                             </v-card>
+                        </v-col>
+                    </v-row>
+                    <v-row v-show="showMode.isGallery">
+                        <v-col v-for="(cat, index) in cats" :key="cat.id" cols="4" sm="3" md="2" class="pa-1">
+                            <v-img
+                            :src="cat.image_url"
+                            aspect-ratio="1"
+                            cover
+                            class="bg-grey-lighten-2 rounded-lg cursor-pointer">
+                         
+                                <template v-slot:placeholder>
+                                    <div class="d-flex align-center justify-center fill-height">
+                                        <v-progress-circular indeterminate color="grey-lighten-4"></v-progress-circular>
+                                    </div>
+                                </template>
+            
+                            </v-img>
                         </v-col>
                     </v-row>
                 </v-container>    
@@ -82,7 +110,12 @@ import {useRouter} from 'vue-router'
 import {setTempFile} from '@/utils/store'
 
 const router = useRouter()
+const showMode = ref<Object>({
+    isGallery: false,
+    isCard: true
+})
 const fileInput = ref<HTMLInputElement | null>(null)
+const isLoading = ref<Boolean>(true)
 const openCameraList = ref(false)
 const openModify = ref<Boolean[]>({})
 const cats = ref<Cat[]>([])
@@ -97,8 +130,14 @@ onMounted (() => {
     cats.value = res.data
     console.log('pull success')
     console.log(cats.value[0].image_url)
+    isLoading.value=false
   })
 })
+
+const changeMode = () => {
+    showMode.value.isCard = !showMode.value.isCard
+    showMode.value.isGallery = !showMode.value.isGallery
+}
 
 const triggerFileSelected = () => {
     fileInput.value.click()
