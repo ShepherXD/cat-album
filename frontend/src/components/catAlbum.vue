@@ -1,9 +1,37 @@
 <template>
-        <v-app-bar color="teal-lighten-2" app>
-            <v-app-bar-nav-icon @click="changeMode" :icon="showMode.isCard ? 'mdi-image-multiple' : 'mdi-card-multiple-outline'"></v-app-bar-nav-icon>
+        <v-app-bar :color="isScrolled ? 'transparent' : 'teal-lighten-2'" app>
+            <!-- ↑↑↑想给bar做个样式 ↑↑↑ 滚动触发 ↑↑↑-->
+            <v-app-bar-nav-icon @click="openDrawer=!openDrawer"></v-app-bar-nav-icon>
             <v-toolbar-title color="white">My Cat Album</v-toolbar-title>
-            <v-btn icon="mdi-magnify"></v-btn>
+            <div class="d-flex align-center">
+                <v-icon class="mr-2" icon="mdi-card-multiple-outline"></v-icon>
+                
+                <v-switch 
+                    v-model="switchOn" 
+                    hide-details 
+                    density="compact"
+                    base-color="teal-lighten-3"
+                    color="cyan-darken-3"
+                    @change="changeMode" inset
+                ></v-switch>
+                
+                <v-icon class="mx-2" icon="mdi-image-multiple"></v-icon>
+            </div>
         </v-app-bar>
+
+        <v-navigation-drawer
+            v-model="openDrawer"
+            location="left"temporary>
+            <v-list>
+                <v-list-item class="pa-2" text-color="grey">
+                    <v-icon color="light-blue-darken-1" icon="mdi-magnify"></v-icon>
+                    search (coming soon)</v-list-item>
+                <v-list-item class="pa-2">
+                    <v-icon color="amber-lighten-2" icon="mdi-star-four-points"></v-icon>
+                    breeds (coming soon)</v-list-item>
+            </v-list>
+
+        </v-navigation-drawer>
         <v-main class="pb-8" style="padding-top: 32px;">
                 <v-container class="px-3">
                     <v-row v-show="showMode.isCard">
@@ -125,8 +153,11 @@ const index = ref<number>(0)
 const fileInput = ref<HTMLInputElement | null>(null)
 // const cameraInput = ref<HTMLInputElement | null>(null)
 const isLoading = ref<Boolean>(true)
+const isScrolled = ref<Boolean>(false)
+const switchOn = ref<Boolean>(false)
 // const openSpeedDial = ref<Boolean>(false)
 const openModify = ref<Boolean[]>({})
+const openDrawer = ref<Boolean>()
 const cats = ref<Cat[]>([])
 const catImgUrls = computed(() => {
     return cats.value.map(cat => cat.image_url)

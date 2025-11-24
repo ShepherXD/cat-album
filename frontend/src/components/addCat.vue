@@ -72,9 +72,10 @@
     <!-- retry dialog -->
     <v-dialog v-model="openRetryDialog">
       <v-card prepend-icon="mdi-alert-circle-outline" max-width="400" class=""
-        text="Gemini API is overloaded. Please try again."
         title="Analysis Failed">
-        
+        <v-card-text>
+          {{ retryText }}
+        </v-card-text>
         <template v-slot:actions>
           <v-btn @click="openRetryDialog=false" variant="text">
             Cancel
@@ -109,6 +110,7 @@ const openRetryDialog = ref<Boolean>(false)
 const currCat = ref<Cat>({
   breed: 'Analysising...'
 })
+const retryText = ref<String>(null)
 const isLoading = ref<Boolean>(false)
 const showChip = ref<Boolean>(true)
 const openSnackBar = ref<Boolean>(false)
@@ -166,12 +168,17 @@ const polling = (id:number) => {
         openSnackBar.value = true
         clearInterval(pollingTimer)
         pollingTimer = null
+        if(currCat.value.breed === 'No Cat'){
+          retryText.value = 'There is no cat in the photo. Please upload another cat photo and retry.'
+          openRetryDialog.value = true
+        }
       } else if(status === 'FAILED'){
         isLoading.value = false
         clearInterval(pollingTimer)
         // alert('Gemini API is overloaded. Please try again later.')
         currCat.value.breed = 'Analysis Failed'
         //应该打开dialog给用户retry的选项
+        retryText.value = "Gemini API is overloaded. Please try again."
         openRetryDialog.value = true
         pollingTimer = null
       }
