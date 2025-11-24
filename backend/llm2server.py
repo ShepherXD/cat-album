@@ -39,9 +39,12 @@ def cat_recognize(image_data): #！！要传入接收到的图片（64编码？
 
     Example: <breed>Scottish Fold (Mixed Breed)</breed>
 
-    2.If the photo appears to be an illustration or cartoon character and not a photograph of a real cat, classify it as how you recognized it.
+    2.If the photo appears to be an illustration or cartoon cat character or cat cosplayer(especially person with cat ears) and not a photograph of a real cat, classify it as how you recognized it.
 
-    Example: <breed>Illust Cat</breed>, <breed>Cat girl</breed>... and so on.
+    Example: <breed>Illust Cat</breed>, <breed>Cat girl</breed>, <breed>Cat Boy</breed>... and so on.
+
+    3.If there's no cat in the photograph at all even a cartoon cat, classify it as no cat.
+    Example: <breed>No Cat</breed>
     '''
     client=genai.Client()
     try:
