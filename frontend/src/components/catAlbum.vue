@@ -141,7 +141,6 @@ onMounted (() => {
   .then(function(res){
     cats.value = res.data
     console.log('pull success')
-    console.log(cats.value[0].image_url)
     isLoading.value=false
   })
 })

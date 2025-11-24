@@ -18,7 +18,7 @@
                                         <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
                                             Breed
 
-                                            <a class="text-caption text-decoration-none text-blue" href="#" rel="noopener noreferrer"
+                                            <a class="text-caption text-decoration-none text-blue" href="https://web.archive.org/web/20150111233321/http://www.cfainc.org/Breeds.aspx" rel="noopener noreferrer"
                                             target="_blank">
                                             Not sure about breed?</a>
                                         </div>
