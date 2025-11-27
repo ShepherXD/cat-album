@@ -116,16 +116,18 @@
                     </v-row>
                 </v-container>    
                  <!-- 隐藏的上传 -->
-            <!-- <input type="file" ref="cameraInput" accept="image/*" capture="environment" style="display: none"  @change="onFileSelected"> -->
+            <input type="file" ref="cameraInput" accept="image/*" capture="environment" style="display: none"  @change="onFileSelected">
             <input  type="file" ref="fileInput" accept="image/png, image/jpeg, image/jpg" style="display: none" @change="onFileSelected">
             <!-- 相机&从相册添加按钮 -->
             <v-fab size="large" @click="clickFab" icon style="position:fixed;bottom: 40px; right: 20px;" z-index="1000" color="light-blue-lighten-1" >
                     <v-icon icon="mdi-camera" color="white"></v-icon>
-                    <!-- <v-speed-dial v-model="openSpeedDial" location="top center" transition="slide-y-transition" >
+                    <v-speed-dial v-model="openSpeedDial" location="top center" transition="slide-y-transition" 
+                                    activator="parent">
+                     <!-- ↑↑↑↑↑ fab的clickFab事件失效 ↑↑↑↑↑把上面这个属性去掉就可以了（大概解决办法就是手动把按钮菜单挪到原来的位置） -->
                             <v-btn  color="cyan-lighten-1" key="add-btn" icon @click="fileInput.click()">
                                 <v-icon size="24" color="white"  icon="mdi-plus"></v-icon>
                             </v-btn>
-                        </v-speed-dial> -->
+                        </v-speed-dial>
             </v-fab>
         </v-main>    
         <VueEasyLightbox
@@ -151,11 +153,11 @@ const showMode = ref<Object>({
 const visible = ref<Boolean>(false)
 const index = ref<number>(0)
 const fileInput = ref<HTMLInputElement | null>(null)
-// const cameraInput = ref<HTMLInputElement | null>(null)
+const cameraInput = ref<HTMLInputElement | null>(null)
 const isLoading = ref<Boolean>(true)
 const isScrolled = ref<Boolean>(false)
 const switchOn = ref<Boolean>(false)
-// const openSpeedDial = ref<Boolean>(false)
+const openSpeedDial = ref<Boolean>(false)
 const openModify = ref<Boolean[]>({})
 const openDrawer = ref<Boolean>()
 const cats = ref<Cat[]>([])
@@ -195,14 +197,14 @@ const triggerFileSelected = () => {
     fileInput.value.click()
 }
 const clickFab = () => {
-    // console.log(openSpeedDial.value)
-    // if (openSpeedDial.value === false){
-    //     openSpeedDial.value = true
-    // } else {
-    //     cameraInput.value.click()
-    // }
-    console.log('点击fab')
-    fileInput.value.click()
+    console.log(openSpeedDial.value)
+    if (openSpeedDial.value === false){
+        openSpeedDial.value = true
+    } else {
+        cameraInput.value.click()
+    }
+    // console.log('点击fab')
+    // fileInput.value.click()
 }
 
 const onFileSelected = (e: any) => {
