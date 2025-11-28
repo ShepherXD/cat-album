@@ -8,7 +8,7 @@ export const tempUploadStore = reactive({
 
 export const setTempFile = (file: File) => {
     tempUploadStore.file = file
-    // 预览链接
+    // preview url
     if (tempUploadStore.preview) {
         URL.revokeObjectURL(tempUploadStore.preview)
     }

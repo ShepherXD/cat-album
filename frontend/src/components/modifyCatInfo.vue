@@ -2,7 +2,7 @@
 
                     <v-sheet color="surface-light" rounded="0" class="h-100 d-flex">
                         <v-card class="mx-auto flex-grow-1" rounded="0" >
-                            <!--组件复用，父组件应传入update或add字段做区分 Update|Add Cat Info-->
+                            <!--TODO: component reuse， distinguish by Update|Add Cat Info-->
                             <v-card-title class="d-flex justify-center pt-8" >Edit Cat Info</v-card-title>
                                 <v-card-text style="padding:2vh 10vw" >
                                     <div class="text-subtitle-1 text-medium-emphasis">Name</div>
@@ -59,14 +59,14 @@ import type { Cat } from './catAlbum.vue'
 const props = defineProps<{
     initialCat: Cat | null
 }>()
-console.log('收到的猫:', props.initialCat)
+console.log('your cat:', props.initialCat)
 const emit = defineEmits(['close','submit'])
 const currCat = ref<Cat | undefined>({})
 watch(() => props.initialCat, (newVal) => {
     if(newVal){
         currCat.value = JSON.parse(JSON.stringify(newVal))
     }
-}, { immediate: true, deep: true }) //←组件刚创建就执行此监听函数
+}, { immediate: true, deep: true }) //← run when the component is created
 const confirm = () => {
     emit('submit', currCat.value)
 }

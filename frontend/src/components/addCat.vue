@@ -49,7 +49,7 @@
       <ModifyCatInfo
         :initial-cat="currCat"
         @submit="(currCat)=>save(currCat)"
-        @close="(currCat)=>save(currCat)"/>  <!--象征性按钮-->
+        @close="(currCat)=>save(currCat)"/>  <!--sumbit info even when user click 'close' (by accident)-->
     </v-bottom-sheet>
     <!-- go back dialog -->
     <v-dialog v-model="openBackDialog">
@@ -177,7 +177,7 @@ const polling = (id:number) => {
         clearInterval(pollingTimer)
         // alert('Gemini API is overloaded. Please try again later.')
         currCat.value.breed = 'Analysis Failed'
-        //应该打开dialog给用户retry的选项
+        //should open dialog and let user retry
         retryText.value = "Gemini API is overloaded. Please try again."
         openRetryDialog.value = true
         pollingTimer = null
@@ -203,9 +203,7 @@ const goBack = () => {
     router.back()
 }
 
-//NOTE：不管按钮点save还是cancel都会执行save函数
-//NOTE: 应该还有个参数，判断是照片来自相册还是来自相机，前者back到猫相册界面，后者back到相机？
-//前提是照相界面能内置，只能打开系统相机的话还是都back到猫相册界面
+//NOTE：run save() nomatter click 'cancel' or 'submit'
 const save = (currCat: Cat, index) => {
     const newCat = currCat
     console.log(newCat)

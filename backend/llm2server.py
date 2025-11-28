@@ -7,9 +7,9 @@ from google.genai import types
 load_dotenv()
 
 # print(os.environ.get("NEKO"))dock
-# image_path = input("请输入图片文件路径：")
+# image_path = input("Please input your image path：")
 
-def cat_recognize(image_data): #！！要传入接收到的图片（64编码？
+def cat_recognize(image_data):
     # image_path="/app/cat-img/shiro.jpg"
 
 
@@ -70,12 +70,12 @@ def cat_recognize(image_data): #！！要传入接收到的图片（64编码？
             raise Exception("Gemini Response parsing error.")
         if breed is None:
             raise Exception("Gemini Response parsing error.")
-        print(f" 猫的品种是： {breed} ")
+        print(f" Cat's Breed: {breed} ")
         return breed
     except errors.ServerError as e:
-        print(f"服务器拥挤:{str(e)}")
+        print(f" Gemini API is overloaded: {str(e)}")
         raise Exception("Gemini API is overloaded, please try again later.")
     except errors.APIError as e:
-        print(f"已达到API使用上限：{str(e)}")
+        print(f"API usage limit reached: {str(e)}")
         raise Exception("API usage limit reached, please try again later.")
  

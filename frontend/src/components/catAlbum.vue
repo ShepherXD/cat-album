@@ -1,6 +1,6 @@
 <template>
         <v-app-bar :color="isScrolled ? 'transparent' : 'teal-lighten-2'" app>
-            <!-- ↑↑↑想给bar做个样式 ↑↑↑ 滚动触发 ↑↑↑-->
+            <!-- ↑↑↑TODO: app-bar's scroll css ↑↑↑  ↑↑↑-->
             <v-app-bar-nav-icon @click="openDrawer=!openDrawer"></v-app-bar-nav-icon>
             <v-toolbar-title color="white">My Cat Album</v-toolbar-title>
             <div class="d-flex align-center">
@@ -36,7 +36,7 @@
                 <v-container class="px-3">
                     <v-row v-show="showMode.isCard">
                         <v-col v-for="(cat,index) in cats" :key="cat.id" cols="12" sm="6" md="4">
-                            <!-- 猫猫卡片 -->
+                            <!-- Cat Cards -->
                             <v-card class="mx-auto pa-4" :cat="cat">
                                 <v-skeleton-loader :loading="isLoading" type="image, list-item-two-line">
                                     <v-responsive>
@@ -64,11 +64,9 @@
                                             <v-card-subtitle class="d-flex flex-shrink-1 text-subtitle-1 pa-0 text-truncate">
                                                 {{cat.breed}}
                                             </v-card-subtitle>
-
-                                            <!-- 占位元素 用来把button挤到右边 -->
+                                
                                             <!-- <v-spacer></v-spacer> -->
 
-                                            <!-- 点击就打开改猫信息界面 -->
                                             <v-card-actions class="d-flex flex-grow-1 flex-shrink-0 justify-end pr-0">
                                                 <v-btn @click="openModify[cat.id]=true" color="teal-lighten-2" text="Edit"></v-btn>
                                             </v-card-actions>
@@ -115,15 +113,15 @@
                         </v-col>
                     </v-row>
                 </v-container>    
-                 <!-- 隐藏的上传 -->
+                 <!-- invisible input -->
             <input type="file" ref="cameraInput" accept="image/*" capture="environment" style="display: none"  @change="onFileSelected">
             <input  type="file" ref="fileInput" accept="image/png, image/jpeg, image/jpg" style="display: none" @change="onFileSelected">
-            <!-- 相机&从相册添加按钮 -->
+            <!-- add from camera & gallery -->
             <v-fab size="large" @click="clickFab" icon style="position:fixed;bottom: 40px; right: 20px;" z-index="1000" color="light-blue-lighten-1" >
                     <v-icon icon="mdi-camera" color="white"></v-icon>
                     <v-speed-dial v-model="openSpeedDial" location="top center" transition="slide-y-transition" 
                                     activator="parent">
-                     <!-- ↑↑↑↑↑ fab的clickFab事件失效 ↑↑↑↑↑把上面这个属性去掉就可以了（大概解决办法就是手动把按钮菜单挪到原来的位置） -->
+                     <!-- ↑↑↑↑↑ activator="parent" disable click event of fab itself ↑↑↑↑↑ -->
                             <v-btn  color="cyan-lighten-1" key="add-btn" icon @click="fileInput.click()">
                                 <v-icon size="24" color="white"  icon="mdi-plus"></v-icon>
                             </v-btn>
@@ -164,11 +162,7 @@ const cats = ref<Cat[]>([])
 const catImgUrls = computed(() => {
     return cats.value.map(cat => cat.image_url)
 })
-// const cats = ref<Cat[]>([
-//     {name:'花花', breed:'狸花猫', rem:'喜欢咬塑料袋 粘人 可以抱着睡觉wwwwwwwwwwwwwwwwwwwwwwww!', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585595901710366/ee348036bb4ea8951505f81b7eededdf.jpg?ex=69215462&is=692002e2&hm=0b58ebab5dc6b6b18826391b0d355de4cce87a8832d0f156f4b92cb2b32dea92&=&format=webp&width=629&height=653'},
-//     {name:'黑黑', breed:'黑猫', rem:'特别特别乖的宝宝Q3Q', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585596325072958/6d0006bc62ba976b2b94800833bf8902.jpg?ex=69215462&is=692002e2&hm=80c7979324c803ccea45552c7717944d4d2dd99f8b2b60e68bfdb605a010de18&=&format=webp&width=581&height=653'},
-//     {name:'小白', breed:'美国短毛猫', rem:'猪~', img:'https://media.discordapp.net/attachments/1256264823050862622/1440585595574550598/f569af35cfa5d9e5d5b12a4daeb41bb9.jpg?ex=69215462&is=692002e2&hm=3859594e52dab32e87c2aaedb610e2321e22a611db32b014823d2b71ea1490e1&=&format=webp&width=869&height=653'}
-// ])
+
 onMounted (() => {
   axios.get(`http://localhost:8000/cat`)
   .then(function(res){
@@ -203,7 +197,7 @@ const clickFab = () => {
     } else {
         cameraInput.value.click()
     }
-    // console.log('点击fab')
+    // console.log('click fab')
     // fileInput.value.click()
 }
 
