@@ -164,7 +164,7 @@ const catImgUrls = computed(() => {
 })
 
 onMounted (() => {
-  axios.get(`http://localhost:8000/cat`)
+  axios.get(`api/cat`)
   .then(function(res){
     cats.value = res.data
     console.log('pull success')
@@ -218,7 +218,7 @@ const save = (modifiedCat: Cat, index:number) => {
     formData.append('name', modifiedCat.name)
     formData.append('breed', modifiedCat.breed)
     formData.append('remark', modifiedCat.remark)
-    axios.patch(`http://localhost:8000/cat/${modifiedCat.id}`,formData,{
+    axios.patch(`api/cat/${modifiedCat.id}`,formData,{
     }).then(function(res){
         console.log('Modify Success!,', res.data)
     })

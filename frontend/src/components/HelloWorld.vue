@@ -42,7 +42,7 @@ const catBreed = ref("");
 
 const getCatName = () => {
   const date = "11-17"
-  axios.get(`http://localhost:8000/cat-name?date=${date}`)
+  axios.get(`api/cat-name?date=${date}`)
   .then(function(res){
     catName.value = res.data
   })
@@ -57,7 +57,7 @@ const postCatImg = (e: any) =>{
   const formData =  new FormData()
   let catImg = e.target.files[0]
   formData.append('catImg',catImg)
-  axios.post(`http://localhost:8000/cat-breed`, formData,{
+  axios.post(`api/cat-breed`, formData,{
   }).then(function(res){
     catBreed.value=res.data
     console.log(catBreed.value)

@@ -137,7 +137,7 @@ const putCat = () => {
     const formData = new FormData()
     formData.append('image',catImg)
     isLoading.value = true
-    axios.put('http://localhost:8000/cat', formData,{
+    axios.put('api/cat', formData,{
       signal: currentController.signal
     }).then(function(res){
         console.log(res.data)
@@ -158,7 +158,7 @@ const putCat = () => {
 const polling = (id:number) => {
   
   pollingTimer = setInterval(() => {
-    axios.get(`http://localhost:8000/cat-breed/task/${id}`)
+    axios.get(`api/cat-breed/task/${id}`)
     .then(function(res){
       const status = res.data.status
       if(status === 'COMPLETED'){
