@@ -117,14 +117,18 @@
             <input type="file" ref="cameraInput" accept="image/*" capture="environment" style="display: none"  @change="onFileSelected">
             <input  type="file" ref="fileInput" accept="image/png, image/jpeg, image/jpg" style="display: none" @change="onFileSelected">
             <!-- add from camera & gallery -->
-            <v-fab size="large" @click="clickFab" icon style="position:fixed;bottom: 40px; right: 20px;" z-index="1000" color="light-blue-lighten-1" >
-                    <v-icon icon="mdi-camera" color="white"></v-icon>
-                    <v-speed-dial v-model="openSpeedDial" location="top center" transition="slide-y-transition" 
+            <v-fab size="large" icon style="position:fixed;bottom: 40px; right: 20px;" z-index="1000" color="light-blue-lighten-1">
+                    <v-icon icon="mdi-plus" color="white"></v-icon>
+                    <v-speed-dial v-model="openSpeedDial"  location="top center" transition="slide-y-transition" 
                                     activator="parent">
                      <!-- ↑↑↑↑↑ activator="parent" disable click event of fab itself ↑↑↑↑↑ -->
-                            <v-btn  color="cyan-lighten-1" key="add-btn" icon @click="fileInput.click()">
-                                <v-icon size="24" color="white"  icon="mdi-plus"></v-icon>
+                            <v-btn color="teal-lighten-1" key="camera-btn" icon @click="cameraInput.click()"> 
+                                <v-icon size="24" color="white" icon="mdi-camera"></v-icon>
                             </v-btn>
+                            <v-btn  color="cyan-lighten-1" key="add-btn" icon @click="fileInput.click()">
+                                <v-icon size="24" color="white"  icon="mdi-file-upload"></v-icon>
+                            </v-btn>
+
                         </v-speed-dial>
             </v-fab>
         </v-main>    
@@ -190,15 +194,13 @@ const hideImg = () => {
 const triggerFileSelected = () => {
     fileInput.value.click()
 }
-const clickFab = () => {
-    console.log(openSpeedDial.value)
-    if (openSpeedDial.value === false){
-        openSpeedDial.value = true
-    } else {
-        cameraInput.value.click()
-    }
-    // console.log('click fab')
-    // fileInput.value.click()
+
+const fabStatusChange = (val: boolean) => {
+    console.log('fab status changed:', val)
+    // if (val === false){
+    //     // console.log('I should open camera now!')
+    //     cameraInput.value.click()
+    // }
 }
 
 const onFileSelected = (e: any) => {
