@@ -30,11 +30,11 @@
                     <v-icon color="amber-lighten-2" icon="mdi-star-four-points"></v-icon>
                     breeds (coming soon)</v-list-item>
             </v-list>
-
         </v-navigation-drawer>
-        <v-main class="pb-8" style="padding-top: 32px;">
-                <v-container class="px-3">
-                    <v-row v-show="showMode.isCard">
+
+        <v-main class="pb-8">
+                <v-container class="px-3 pt-0">
+                    <v-row v-show="showMode.isCard" class="mt-3">
                         <v-col v-for="(cat,index) in cats" :key="cat.id" cols="12" sm="6" md="4">
                             <!-- Cat Cards -->
                             <v-card class="mx-auto pa-4" :cat="cat">
@@ -94,7 +94,7 @@
                             </v-card>
                         </v-col>
                     </v-row>
-                    <v-row v-show="showMode.isGallery">
+                    <v-row v-show="showMode.isGallery" class="mt-0">
                         <v-col v-for="(cat, index) in cats" :key="cat.id" cols="4" sm="3" md="2" class="pa-0">
                             <v-img
                             :src="cat.image_url"

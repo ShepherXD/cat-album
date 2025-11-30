@@ -5,7 +5,7 @@
       </template>
   </v-app-bar>
 
-  <v-main class="bg-black d-flex flex-column  overflow-hidden" style="height: 100vh">
+  <v-main class="bg-black d-flex flex-column  overflow-hidden" style="height: 100%">
     <div class="flex-grow-1 d-flex align-center overflow-hidden justify-center w-100 position-relative"
         :class="{'lifted':openEdit}"
         height="60vh">

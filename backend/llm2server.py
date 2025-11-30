@@ -42,7 +42,7 @@ def cat_recognize(image_data):
 
     Example: <breed>Illust Cat</breed>, <breed>Cat girl</breed>, <breed>Cat Boy</breed>... and so on.
 
-    3.If there's no cat in the photograph at all even a cartoon cat, classify it as no cat.
+    3.If there's no cat in the photograph at all, classify it as no cat. If it's an illustration but not cat, classify it as no cat.
     Example: <breed>No Cat</breed>
     '''
     client=genai.Client()
