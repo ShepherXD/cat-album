@@ -25,9 +25,8 @@ def cat_recognize(image_data):
 
     Examples: <breed>American Shorthair</breed>, <breed>British Shorthair</breed>, <breed>Japanese Bobtail</breed>...... and so on.
 
-    Reference Link: 
-    https://web.archive.org/web/20150111233321/http://www.cfainc.org/Breeds.aspx
-    https://en.wikipedia.org/wiki/List_of_cat_breeds
+    You can refer to the following list of recognized purebred cat breeds:
+    {British Shorthair, Burmese cat, Persian cat, Siamese cat, Abyssinian, Balinese cat, Birman, Bombay cat, Devon Rex, American Shorthair, Maine Coon, Cornish Rex, Exotic Shorthair, Egyptian Mau, American Bobtail, Ragdoll, Chartreux, American Wirehair, American Curl, Burmilla, Sphynx cat, Scottish Fold, Japanese Bobtail, Oriental Shorthair, Siberian cat, Korat, Norwegian Forest Cat, Australian Mist, Turkish Van, Somali cat, Ocicat, Russian Blue, Havana Brown, Singapura cat, Tonkinese cat, LaPerm, Manx Cat, Snowshoe cat, Chausie, Cymric, Selkirk Rex, Tiffanie, Himalayan cat, Turkish Angora, Colorpoint Shorthair, Munchkin cat, Toyger, Nebelung, Oriental Longhair, Ragamuffin, Khao Manee}
 
     Scenario 2: Mixed/Domestic Cat Classification
     If the cat does not meet the criteria in Scenario 1, exhibits a mix of various breed characteristics, or possesses the common features of a Japanese domestic cat, the cat should be classified by the general term for its most prominent coat color or pattern.
