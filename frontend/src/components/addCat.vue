@@ -25,13 +25,14 @@
           <v-icon end icon="mdi-close-circle" @click.stop="hideChip"></v-icon>
         </v-chip>
     </div>
-    
+
+    <input type="file" ref="fileInput" accept="image/*"  style="display: none"  @change="onFileSelected">
     <input type="file" ref="cameraInput" accept="image/*" capture="environment" style="display: none"  @change="onFileSelected">
 
     <div class="d-flex justify-space-around align-center w-100 pb-10 pt-4 flex-shrink-0" v-if="!openEdit">
         
       <div> 
-        <v-btn icon="mdi-camera" @click="cameraInput.click()" size="x-large" variant="text" color="white"></v-btn>
+        <v-btn icon="mdi-camera" @click="opencamera" size="x-large" variant="text" color="white"></v-btn>
       </div>
 
       <v-btn color="teal-lighten-2" @click="checkStatus" size="x-large" icon>
@@ -81,7 +82,7 @@
             Cancel
           </v-btn>
 
-          <v-btn @click="retry" class="flex-grow-1" color="primary" variant="tonal">
+          <v-btn @click="retry(retryText)" class="flex-grow-1" color="primary" variant="tonal">
             Retry
           </v-btn>
         </template>
@@ -107,14 +108,13 @@ const router = useRouter()
 const openEdit = ref<Boolean>(false)
 const openBackDialog = ref<Boolean>(false)
 const openRetryDialog = ref<Boolean>(false)
-const currCat = ref<Cat>({
-  breed: 'Analysising...'
-})
+const currCat = ref<Cat>({})
 const retryText = ref<String>(null)
 const isLoading = ref<Boolean>(false)
 const showChip = ref<Boolean>(true)
 const openSnackBar = ref<Boolean>(false)
 const visible = ref<Boolean>(false)  //whole picture
+const fileInput = ref<HTMLInputElement | null>(null)
 const cameraInput = ref<HTMLInputElement | null>(null)
 let currentController: AbortController | null = null 
 let pollingTimer = null
@@ -124,6 +124,7 @@ onMounted (() => {
 })
 
 const putCat = () => {
+  currCat.value.breed = "Analysing..."
   if (currentController) {
     currentController.abort()
   }
@@ -216,9 +217,21 @@ const save = (currCat: Cat, index) => {
 const hideChip = () => {
     showChip.value = false
 }
-const retry = () => {
-    putCat()
-    openRetryDialog.value = false
+const retry = (txt: string) => {
+    if (txt.match(/overloaded/)) {
+      putCat()
+      openRetryDialog.value = false
+    } else if (txt.match(/no cat/)) {
+      openRetryDialog.value = false
+      fileInput.value.click()     // openFile(from gallery or take a photo)
+      currCat.value.breed = 'Waiting for cat photo...'
+    }
+    
+}
+
+const opencamera = () => {
+    cameraInput.value.click()
+
 }
 
 const onFileSelected = (e: any) => {

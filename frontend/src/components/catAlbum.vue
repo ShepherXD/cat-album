@@ -217,9 +217,9 @@ const save = (modifiedCat: Cat, index:number) => {
     openModify.value[modifiedCat.id] = false
 
     const formData = new FormData()
-    formData.append('name', modifiedCat.name)
-    formData.append('breed', modifiedCat.breed)
-    formData.append('remark', modifiedCat.remark)
+    formData.append('name', modifiedCat.name||"")
+    formData.append('breed', modifiedCat.breed||"")
+    formData.append('remark', modifiedCat.remark||"")
     axios.patch(`api/cat/${modifiedCat.id}`,formData,{
     }).then(function(res){
         console.log('Modify Success!,', res.data)
