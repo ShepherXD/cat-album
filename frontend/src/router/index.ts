@@ -12,8 +12,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // import { routes } from 'vue-router/auto-routes'
 
 const routes = [
-  {path: '/', component: HelloWorld},
-  {path: '/cat-album', component: CatAlbum},
+  {path: '/', component: CatAlbum},
   {path: '/add-cat', component: AddCat}
 ]
 const router = createRouter({

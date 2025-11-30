@@ -1,11 +1,29 @@
 version: '3.8'
 
 services:
-  # Backend
-  backend:
+  # Backend Production
+  backend-prod:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      target: prod
+    profiles:
+      - prod
+    volumes:
+      - ./backend:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s       
+      timeout: 5s         
+      retries: 3          
+      start_period: 5s  
+
+  # Backend Development
+  backend-dev:
+    build:
+      context: ./backend
+      target: dev
+    profiles:
+      - dev
     ports:
       - "8000:8000"
     volumes:
@@ -17,11 +35,31 @@ services:
       retries: 3          
       start_period: 5s  
 
-  #Frontend 
-  frontend:
+    #Frontend Production
+  frontend-prod:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      target: prod
+    profiles:
+      - prod
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s 
+
+  #Frontend Development
+  frontend-dev:
+    build:
+      context: ./frontend
+      target: dev
+    profiles:
+      - dev
     ports:
       - "3000:3000"
     volumes:

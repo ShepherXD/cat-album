@@ -22,7 +22,10 @@ AWS_BUCKET_NAME="<Your Bucket Name>"
 GEMINI_API_KEY="<Your Gemini API KEY>"
 EOF
 
-# Start Docker Service
-docker compose up --build
+# Start Docker Service in Developerment Environment
+docker compose --profile dev up --build
+
+# Or Start Docker Service in Production Environment
+docker compose --profile prod up --build
 ```
 
