@@ -2,7 +2,7 @@
 A web application built with Vue.js and FastAPI to show cat images with LLM-based classification technique on cat breeds. 
 
 ## Demo
-
+https://cat-album.shepherxd.net
 
 ## Quick Start
 ### 1. Apply a Gemini API KEY from Google AI Studio (Free)
