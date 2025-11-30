@@ -1,4 +1,4 @@
-:3000
+:443
 {
     bind 0.0.0.0
     encode gzip
@@ -7,6 +7,7 @@
         output stdout
         format console
     }
+    tls internal
 
 
     # Backend
@@ -20,5 +21,9 @@
         try_files {path} /index.html
         file_server
     }
+}
+
+:80 {
+    redir https://{host}{uri} permanent
 }
 
