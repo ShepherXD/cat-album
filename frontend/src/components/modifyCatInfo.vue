@@ -3,8 +3,8 @@
                     <v-sheet color="surface-light" rounded="0" class="h-100 d-flex">
                         <v-card class="mx-auto flex-grow-1" rounded="0" >
                             <!--TODO: component reuse， distinguish by Update|Add Cat Info-->
-                            <v-card-title class="d-flex justify-center pt-8" >Edit Cat Info</v-card-title>
-                                <v-card-text style="padding:2vh 10vw" >
+                            <v-card-title class="d-flex justify-center pt-8" >{{ mode==='Add' ? 'Add' : 'Edit' }} Cat Info</v-card-title>
+                                <v-card-text style="padding:1vh 10vw" >
                                     <div class="text-subtitle-1 text-medium-emphasis">Name</div>
 
                                         <v-text-field
@@ -36,10 +36,12 @@
                                         <v-text-field
                                             v-model="currCat.remark"
                                             density="compact"
-                                            placeholder="Cat's habbit or whatever you want to express"
+                                            placeholder="Whatever you want to remark"
                                             prepend-inner-icon="mdi-rodent"
                                             variant="outlined"
                                         ></v-text-field>
+
+                                        <v-btn v-if="mode === 'Edit'" @click="deleteInfo" width="100%" variant="flat" color="red-lighten-2">Delete</v-btn>
                                 </v-card-text>
                                 <v-divider></v-divider>
 
@@ -58,16 +60,22 @@ import {ref,watch} from 'vue'
 import type { Cat } from './catAlbum.vue'
 const props = defineProps<{
     initialCat: Cat | null
+    mode: string
 }>()
 console.log('your cat:', props.initialCat)
-const emit = defineEmits(['close','submit'])
+const emit = defineEmits(['close','submit','delete'])
 const currCat = ref<Cat | undefined>({})
 watch(() => props.initialCat, (newVal) => {
     if(newVal){
         currCat.value = JSON.parse(JSON.stringify(newVal))
     }
 }, { immediate: true, deep: true }) //← run when the component is created
+
 const confirm = () => {
     emit('submit', currCat.value)
+}
+
+const deleteInfo = () => {
+    emit('delete', currCat.value.id)
 }
 </script>

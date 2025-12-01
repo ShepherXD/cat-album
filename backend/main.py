@@ -43,7 +43,6 @@ class Cat(SQLModel, table=True):
     image_url: str
     analysis_task_id: Optional[int] = Field(default=None, foreign_key="breed_analysis_task.id")
 
-
 class TaskStatus(str, Enum):
     IN_PROGRESS = "IN_PROGRESS"
     COMPLETED = "COMPLETED"
@@ -136,6 +135,18 @@ async def modify_cat(
         session.commit()
         session.refresh(cat)
     
+    return cat
+
+@app.delete("/cat/{cat_id}",response_model=Cat)
+def delete_cat(cat_id: int) -> str:
+    with Session(engine) as session:
+        cat = session.get(Cat, cat_id)
+        if not cat:
+            raise HTTPException(status_code=404, detail="Cat not found")
+        
+        session.delete(cat)
+        session.commit()
+
     return cat
 
 @app.get("/cat/{cat_id}", response_model=Cat)

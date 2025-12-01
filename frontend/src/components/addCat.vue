@@ -40,7 +40,7 @@
       </v-btn>
 
       <div>
-        <v-btn icon="mdi-pencil" @click="openEdit=true" variant="text" size="x-large" color="white"></v-btn>
+        <v-btn v-if="mode!='Add'" icon="mdi-pencil" @click="openEdit=true" variant="text" size="x-large" color="white"></v-btn>
       </div>
 
     </div> 
@@ -49,6 +49,8 @@
     <v-bottom-sheet v-model="openEdit" rounded="0" min-height="50vh" class="overflow-hidden">
       <ModifyCatInfo
         :initial-cat="currCat"
+        :mode="'Add'"
+        @delete="deleteInfo"
         @submit="(currCat)=>save(currCat)"
         @close="(currCat)=>save(currCat)"/>  <!--sumbit info even when user click 'close' (by accident)-->
     </v-bottom-sheet>
@@ -101,7 +103,7 @@ import { useRouter } from 'vue-router'
 import ModifyCatInfo from './modifyCatInfo.vue'
 import axios from 'axios'
 import type { Cat } from './catAlbum.vue'
-import { tempUploadStore, setTempFile, clearTempFile } from '@/utils/store'
+import { tempUploadStore, setTempFile, clearTempFile } from '@/store/store'
 import VueEasyLightbox from 'vue-easy-lightbox'
 
 const router = useRouter()
@@ -124,17 +126,23 @@ onMounted (() => {
 })
 
 const putCat = () => {
-  currCat.value.breed = "Analysing..."
+  if (!showChip.value) {
+    showChip.value = true
+  }
+
   if (currentController) {
     currentController.abort()
   }
+
   currentController =  new AbortController()
   if (pollingTimer) {
     clearInterval(pollingTimer)
     pollingTimer = null
   }
   const catImg = tempUploadStore.file
+
   if(catImg) {
+    currCat.value.breed = "Analysing..."
     const formData = new FormData()
     formData.append('image',catImg)
     isLoading.value = true
@@ -149,10 +157,14 @@ const putCat = () => {
     }).catch(error => { 
         if(axios.isCancel(error)){
           console.log('privior request cancel')
+
         }else {
           console.log(error)
         }
     })
+
+  }else {
+    currCat.value.breed = "Waiting for cat photo..."
   }
 }
 
@@ -164,15 +176,20 @@ const polling = (id:number) => {
       const status = res.data.status
       if(status === 'COMPLETED'){
         currCat.value.breed = res.data.result
+        if (!showChip.value) {
+          showChip.value = true
+        }
         console.log(currCat.value.breed)
         isLoading.value = false
         openSnackBar.value = true
         clearInterval(pollingTimer)
         pollingTimer = null
+
         if(currCat.value.breed === 'No Cat'){
           retryText.value = 'There is no cat in the photo. Please upload another cat photo and retry.'
           openRetryDialog.value = true
         }
+
       } else if(status === 'FAILED'){
         isLoading.value = false
         clearInterval(pollingTimer)
@@ -191,6 +208,7 @@ const checkStatus = () => {
   if (isLoading.value === true){
     openBackDialog.value = true
     console.log(openBackDialog.value)
+
   } else {
     console.log(isLoading.value)
     console.log(openBackDialog.value)
@@ -200,7 +218,6 @@ const checkStatus = () => {
 
 const goBack = () => {
     clearTempFile()
-    console.log("已清除图片链接")
     router.back()
 }
 
@@ -221,6 +238,7 @@ const retry = (txt: string) => {
     if (txt.match(/overloaded/)) {
       putCat()
       openRetryDialog.value = false
+
     } else if (txt.match(/no cat/)) {
       openRetryDialog.value = false
       fileInput.value.click()     // openFile(from gallery or take a photo)
@@ -243,6 +261,8 @@ const onFileSelected = (e: any) => {
     }
     
 }
+
+
 
 onUnmounted(() => {
     if (currentController) currentController.abort()

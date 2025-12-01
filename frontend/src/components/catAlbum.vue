@@ -57,7 +57,7 @@
 
                                         <div class="d-flex align-center px-3 py-1"> 
                     
-                                            <v-card-title class="d-flex flex-shrink-0 text-h6 pa-0 mr-4">
+                                            <v-card-title class="d-flex flex-shrink-1 text-h6 pa-0 mr-4 text-truncate">
                                                 {{ cat.name }}
                                             </v-card-title>
 
@@ -75,6 +75,8 @@
                                                 <v-card width="90vw" max-width="800px" rounded="lg">
                                                         <ModifyCatInfo
                                                             :initialCat="cat"
+                                                            :mode="'Edit'"
+                                                            @delete="(id)=>deleteInfo(id,index)"
                                                             @submit="(modifiedCat)=>save(modifiedCat,index)"
                                                             @close="openModify[cat.id]=false"
                                                         />
@@ -82,7 +84,7 @@
                                                 </v-card>
                                             </v-overlay>
                                         </div>
-
+                                        
                                         <v-card-text class="py-0">
                                             <div class="text-truncate" style="max-width: 300;">
                                                 {{cat.remark}}
@@ -131,6 +133,25 @@
 
                         </v-speed-dial>
             </v-fab>
+            <!-- delete dialog -->
+            <v-dialog v-model="isDialogOpened">
+                <v-card prepend-icon="mdi-alert-circle-outline" max-width="400" class=""
+                    title="Are you sure to delete?">
+                    <v-card-text>
+                        This operation cannot be undone.
+                    </v-card-text>
+                    <template v-slot:actions>
+                    <v-btn @click="yes" variant="text" color="red-lighten-2">
+                        Delete
+                    </v-btn>
+
+                    <v-btn @click="no" class="flex-grow-1" variant="tonal" color="teal-lighten-2">
+                        Cancel
+                    </v-btn>
+                    </template>
+                </v-card>
+            </v-dialog>
+
         </v-main>    
         <VueEasyLightbox
             :visible="visible"
@@ -145,8 +166,9 @@ import {ref, onMounted,computed} from 'vue'
 import axios from 'axios'
 import ModifyCatInfo from './modifyCatInfo.vue'
 import {useRouter} from 'vue-router'
-import {setTempFile} from '@/utils/store'
+import {setTempFile} from '@/store/store'
 import VueEasyLightbox from 'vue-easy-lightbox'
+import { deleteConfirm } from '@/store/store'
 const router = useRouter()
 const showMode = ref<Object>({
     isGallery: false,
@@ -195,13 +217,6 @@ const triggerFileSelected = () => {
     fileInput.value.click()
 }
 
-const fabStatusChange = (val: boolean) => {
-    console.log('fab status changed:', val)
-    // if (val === false){
-    //     // console.log('I should open camera now!')
-    //     cameraInput.value.click()
-    // }
-}
 
 const onFileSelected = (e: any) => {
     const selectedFile = e.target.files[0]
@@ -225,6 +240,25 @@ const save = (modifiedCat: Cat, index:number) => {
         console.log('Modify Success!,', res.data)
     })
 }
+
+
+const {isDialogOpened,confirm, yes,no} = deleteConfirm()
+const deleteInfo = async (id: number,index) => {
+    const result = await confirm()
+    if (result) {
+        axios.delete(`api/cat/${id}`)
+        .then(function(res){
+            const name = res.data.name||'Anonymous'
+            cats.value.splice(index,1)
+            console.log('Delete Sucess!,',name, 'has left.')
+        })
+
+    }else {
+        console.log('delete canceled')
+    }
+
+}
+
 export interface Cat {
     id?: number | string; 
     name: string;

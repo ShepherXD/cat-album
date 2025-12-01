@@ -1,4 +1,4 @@
-import { reactive } from 'vue'
+import { reactive,ref } from 'vue'
 
 export const tempUploadStore = reactive({
     file: null as File | null,      
@@ -22,4 +22,28 @@ export const clearTempFile = () => {
         URL.revokeObjectURL(tempUploadStore.preview)
     }
     tempUploadStore.preview = ''
+}
+
+
+export const deleteConfirm = () => {
+    const isDialogOpened = ref<boolean>(false)
+    let waiting = null
+    const confirm = (): Promise<string> => {
+        isDialogOpened.value = true
+        return new Promise ((resolve,reject) => {
+            waiting = resolve
+        })
+    }
+
+    const yes = () => {
+        isDialogOpened.value = false
+        waiting(true)
+    }
+
+    const no = () => {
+        isDialogOpened.value = false
+        waiting(false)
+    }
+
+    return {isDialogOpened,confirm, yes, no}
 }
