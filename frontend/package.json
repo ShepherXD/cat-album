@@ -14,10 +14,10 @@
   "dependencies": {
     "@fontsource/roboto": "5.2.7",
     "@mdi/font": "7.4.47",
+    "axios": "^1.13.2",
     "vue": "^3.5.21",
     "vue-router": "^4.5.1",
-    "vuetify": "^3.10.1",
-    "axios": "^1.13.2"
+    "vuetify": "^3.10.1"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",
@@ -26,6 +26,7 @@
     "@vue/tsconfig": "^0.8.1",
     "eslint": "^9.35.0",
     "eslint-config-vuetify": "^4.2.0",
+    "material-design-icons-iconfont": "^6.7.0",
     "npm-run-all2": "^8.0.4",
     "sass-embedded": "^1.92.1",
     "typescript": "~5.9.2",
@@ -34,8 +35,8 @@
     "unplugin-vue-router": "^0.15.0",
     "vite": "^7.1.5",
     "vite-plugin-vuetify": "^2.1.2",
-    "vue-tsc": "^3.0.7",
-    "vue-easy-lightbox": "^1.4.0"
+    "vue-easy-lightbox": "^1.4.0",
+    "vue-tsc": "^3.0.7"
   },
   "packageManager": "pnpm@10.22.0+sha512.bf049efe995b28f527fd2b41ae0474ce29186f7edcb3bf545087bd61fbbebb2bf75362d1307fda09c2d288e1e499787ac12d4fcb617a974718a6051f2eee741c"
 }

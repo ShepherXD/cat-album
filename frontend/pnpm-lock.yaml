@@ -45,6 +45,9 @@ importers:
       eslint-config-vuetify:
         specifier: ^4.2.0
         version: 4.2.0(eslint@9.39.1)(typescript@5.9.3)
+      material-design-icons-iconfont:
+        specifier: ^6.7.0
+        version: 6.7.0
       npm-run-all2:
         specifier: ^8.0.4
         version: 8.0.4
@@ -69,6 +72,9 @@ importers:
       vite-plugin-vuetify:
         specifier: ^2.1.2
         version: 2.1.2(vite@7.2.2(@types/node@22.19.1)(sass-embedded@1.93.3)(sass@1.93.3)(yaml@2.8.1))(vue@3.5.24(typescript@5.9.3))(vuetify@3.10.11)
+      vue-easy-lightbox:
+        specifier: ^1.4.0
+        version: 1.19.0(vue@3.5.24(typescript@5.9.3))
       vue-tsc:
         specifier: ^3.0.7
         version: 3.1.4(typescript@5.9.3)
@@ -1359,6 +1365,9 @@ packages:
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
+  material-design-icons-iconfont@6.7.0:
+    resolution: {integrity: sha512-lSj71DgVv20kO0kGbs42icDzbRot61gEDBLQACzkUuznRQBUYmbxzEkGU6dNBb5fRWHMaScYlAXX96HQ4/cJWA==}
+
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
@@ -1907,6 +1916,12 @@ packages:
 
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
+
+  vue-easy-lightbox@1.19.0:
+    resolution: {integrity: sha512-YxLXgjEn91UF3DuK1y8u3Pyx2sJ7a/MnBpkyrBSQkvU1glzEJASyAZ7N+5yDpmxBQDVMwCsL2VmxWGIiFrWCgA==}
+    engines: {node: '>=14.18.3'}
+    peerDependencies:
+      vue: ^3.0.0
 
   vue-eslint-parser@10.2.0:
     resolution: {integrity: sha512-CydUvFOQKD928UzZhTp4pr2vWz1L+H99t7Pkln2QSPdvmURT0MoC4wUccfCnuEaihNsu9aYYyk+bep8rlfkUXw==}
@@ -3219,6 +3234,8 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  material-design-icons-iconfont@6.7.0: {}
+
   math-intrinsics@1.1.0: {}
 
   memorystream@0.3.1: {}
@@ -3731,6 +3748,10 @@ snapshots:
       yaml: 2.8.1
 
   vscode-uri@3.1.0: {}
+
+  vue-easy-lightbox@1.19.0(vue@3.5.24(typescript@5.9.3)):
+    dependencies:
+      vue: 3.5.24(typescript@5.9.3)
 
   vue-eslint-parser@10.2.0(eslint@9.39.1):
     dependencies:
