@@ -1,46 +1,54 @@
 <template>
-  <v-app-bar v-if="!openEdit" color="transparent" elevation="0" absolute>
+  <!-- <v-app-bar v-if="!openEdit" color="transparent" elevation="0" absolute>
       <template v-slot:prepend>
         <v-btn icon="mdi-arrow-left" variant="tonal" color="white" class="bg-black-alpha" @click="goBack"></v-btn>
       </template>
-  </v-app-bar>
+  </v-app-bar> -->
 
   <v-main class="bg-black d-flex flex-column  overflow-hidden" style="height: 100%">
+    <v-btn
+        icon="mdi-arrow-left"
+        variant="text"
+        color="white"
+        class="position-absolute top-0 left-0 ma-4"
+        style="z-index: 10"
+        @click="goBack"
+    ></v-btn>
     <div class="flex-grow-1 d-flex align-center overflow-hidden justify-center w-100 position-relative"
-        :class="{'lifted':openEdit}"
-        height="60vh">
+        :class="{'lifted':openEdit}">
         <v-progress-linear :active="isLoading" :indeterminate="isLoading" 
                             color="cyan-darken-1" height="6" absolute location="top" ></v-progress-linear>
-        <v-img :src="tempUploadStore.preview" cover @click="visible=true"></v-img>
+        <v-img :src="tempUploadStore.preview" width="100%" @click="visible=true">
+            <div class="d-flex fill-height align-end justify-center pb-4">
+                 <v-chip :model-value="true" class="ma-2" :class="showChip? 'visible-chip':'invisible-chip'" color="teal-lighten-1" variant="flat" @click.stop>
+                    Cat's Breed:  {{ currCat.breed }}
+                  <v-icon end icon="mdi-close-circle" @click.stop="hideChip"></v-icon>
+                </v-chip>
+            </div>
+        </v-img>
                 
         <!-- <v-snackbar v-model="openSnackBar"   color="teal" rounded="pill" min-width="auto" max-width="80vw" absolute location="top">
           <strong class="text-truncate">Cat's Breed: {{ currCat.breed }}</strong>
         </v-snackbar> -->
          
     </div>
-    <div class="text-center flex-shrink-0">
-        <v-chip :model-value="true" class="ma-2" :class="showChip? 'visible-chip':'invisible-chip'" color="cyan-darken-1" variant="flat" 
-                absolute location="bottom">
-            Cat's Breed:  {{ currCat.breed }}
-          <v-icon end icon="mdi-close-circle" @click.stop="hideChip"></v-icon>
-        </v-chip>
-    </div>
 
     <input type="file" ref="fileInput" accept="image/*"  style="display: none"  @change="onFileSelected">
     <input type="file" ref="cameraInput" accept="image/*" capture="environment" style="display: none"  @change="onFileSelected">
 
-    <div class="d-flex justify-space-around align-center w-100 pb-10 pt-4 flex-shrink-0" v-if="!openEdit">
+    <div class="d-flex align-center w-100 pb-10 pt-4 flex-shrink-0" v-if="!openEdit">
         
-      <div> 
-        <v-btn icon="mdi-camera" @click="opencamera" size="x-large" variant="text" color="white"></v-btn>
+      <div class="d-flex justify-center" style="flex: 1"> 
+        <v-btn icon="mdi-replay" @click="opencamera" size="x-large" variant="text" color="white"></v-btn>
       </div>
 
-      <v-btn color="teal-lighten-2" @click="checkStatus" size="x-large" icon>
+      <v-btn color="pink-accent-2" @click="checkStatus" size="x-large" icon>
         <v-icon icon="mdi-check"  color="white"></v-icon>
       </v-btn>
 
-      <div>
-        <v-btn v-if="mode!='Add'" icon="mdi-pencil" @click="openEdit=true" variant="text" size="x-large" color="white"></v-btn>
+      <div class="d-flex justify-center" style="flex: 1">
+        <v-btn icon="mdi-close" size="x-large" variant="text" color="white" @click="onCustomClick"></v-btn>
+        <v-btn icon="mdi-pencil" @click="openEdit=true" variant="text" size="x-large" color="white"></v-btn>
       </div>
 
     </div> 
@@ -111,6 +119,7 @@ const openEdit = ref<Boolean>(false)
 const openBackDialog = ref<Boolean>(false)
 const openRetryDialog = ref<Boolean>(false)
 const currCat = ref<Cat>({})
+const mode = ref('Add')
 const retryText = ref<String>(null)
 const isLoading = ref<Boolean>(false)
 const showChip = ref<Boolean>(true)
@@ -201,7 +210,7 @@ const polling = (id:number) => {
         pollingTimer = null
       }
     })
-  }, 1000)
+  }, 750)
 }
 
 const checkStatus = () => {
@@ -262,7 +271,9 @@ const onFileSelected = (e: any) => {
     
 }
 
-
+const onCustomClick = () => {
+  // custom function
+}
 
 onUnmounted(() => {
     if (currentController) currentController.abort()
