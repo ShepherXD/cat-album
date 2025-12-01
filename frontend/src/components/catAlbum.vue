@@ -1,8 +1,8 @@
 <template>
         <v-app-bar :color="isScrolled ? 'transparent' : 'teal-lighten-2'" app>
             <!-- ↑↑↑TODO: app-bar's scroll css ↑↑↑  ↑↑↑-->
-            <v-app-bar-nav-icon @click="openDrawer=!openDrawer"></v-app-bar-nav-icon>
-            <v-toolbar-title color="white">My Cat Album</v-toolbar-title>
+            <!-- <v-app-bar-nav-icon @click="openDrawer=!openDrawer"></v-app-bar-nav-icon> -->
+            <v-toolbar-title color="white">Cat Album</v-toolbar-title>
             <div class="d-flex align-center">
                 <v-icon class="mr-2" icon="mdi-card-multiple-outline"></v-icon>
                 
@@ -33,76 +33,71 @@
         </v-navigation-drawer>
 
         <v-main class="pb-8">
-                <v-container class="px-3 pt-0">
+                <v-container class="px-5 pt-0" fluid>
                     <v-row v-show="showMode.isCard" class="mt-3">
-                        <v-col v-for="(cat,index) in cats" :key="cat.id" cols="12" sm="6" md="4">
-                            <!-- Cat Cards -->
-                            <v-card class="mx-auto pa-4" :cat="cat">
-                                <v-skeleton-loader :loading="isLoading" type="image, list-item-two-line">
-                                    <v-responsive>
-                                        <v-img
-                                        class="align-end text-white bg-grey-lighten-2"
-                                        height="250"
-                                        :src=cat.image_url
-                                        @click="showImg(index)"
-                                        cover>
+                        <v-col v-for="(cat,index) in cats" :key="cat.id" cols="12" sm="6" md="3">
+                        <v-card class="mx-auto" :cat="cat">
+                            <!-- <v-skeleton-loader :loading="isLoading" type="image, list-item-two-line"> -->
+                            <v-img
+                            :src="cat.image_url"
+                            height="235px"
+                            cover
+                            class="align-end text-white"
+                            gradient="to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%"
+                            @click="showImg(index)"
+                            >
+                                <v-btn
+                                    icon="mdi-pencil"
+                                    variant="text"
+                                    color="white"
+                                    size="small"
+                                    class="position-absolute top-0 right-0 ma-2"
+                                    @click.stop="openModify[cat.id]=true"
+                                ></v-btn>
 
-                                            <template v-slot:placeholder>
-                                                <div class="d-flex align-center justify-center fill-height">
-                                                    <v-progress-circular indeterminate color="grey-lighten-4"></v-progress-circular>
-                                                </div>
-                                            </template>
+                                <div class="pa-3">
+                                    <div class="text-h6 font-weight-bold lh-1">
+                                    {{ cat.name }}
+                                    </div>
+                                    <div class="text-caption opacity-80">
+                                    {{ cat.breed }}
+                                    </div>
+                                </div>
+                            </v-img>
 
-                                        </v-img>
+                            <v-card-text class="pa-2 d-flex align-center text-caption text-grey-darken-1">
+                            <v-icon size="x-small" color="grey" class="mr-1" icon="md:pets"></v-icon>
+                                <span class="text-truncate">
+                                    {{ cat.remark }}
+                                </span>
+                            </v-card-text>
 
-                                        <div class="d-flex align-center px-3 py-1"> 
-                    
-                                            <v-card-title class="d-flex flex-shrink-1 text-h6 pa-0 mr-4 text-truncate">
-                                                {{ cat.name }}
-                                            </v-card-title>
+                            <v-overlay v-model="openModify[cat.id]" class="align-center justify-center" scroll-strategy="block">
+                                            <v-card width="90vw" max-width="800px" rounded="lg">
+                                                    <ModifyCatInfo
+                                                        :initialCat="cat"
+                                                        :mode="'Edit'"
+                                                        @delete="(id)=>deleteInfo(id,index)"
+                                                        @submit="(modifiedCat)=>save(modifiedCat,index)"
+                                                        @close="openModify[cat.id]=false"
+                                                    />
 
-                                            <v-card-subtitle class="d-flex flex-shrink-1 text-subtitle-1 pa-0 text-truncate">
-                                                {{cat.breed}}
-                                            </v-card-subtitle>
+                                            </v-card>
+                            </v-overlay>
                                 
-                                            <!-- <v-spacer></v-spacer> -->
 
-                                            <v-card-actions class="d-flex flex-grow-1 flex-shrink-0 justify-end pr-0">
-                                                <v-btn @click="openModify[cat.id]=true" color="teal-lighten-2" text="Edit"></v-btn>
-                                            </v-card-actions>
-
-                                            <v-overlay v-model="openModify[cat.id]" class="align-center justify-center" scroll-strategy="block">
-                                                <v-card width="90vw" max-width="800px" rounded="lg">
-                                                        <ModifyCatInfo
-                                                            :initialCat="cat"
-                                                            :mode="'Edit'"
-                                                            @delete="(id)=>deleteInfo(id,index)"
-                                                            @submit="(modifiedCat)=>save(modifiedCat,index)"
-                                                            @close="openModify[cat.id]=false"
-                                                        />
-
-                                                </v-card>
-                                            </v-overlay>
-                                        </div>
-                                        
-                                        <v-card-text class="py-0">
-                                            <div class="text-truncate" style="max-width: 300;">
-                                                {{cat.remark}}
-                                            </div>
-                                        </v-card-text>
-                                    </v-responsive>
-                                </v-skeleton-loader>
-                                
+                            <!-- </v-skeleton-loader> -->
                             </v-card>
                         </v-col>
                     </v-row>
-                    <v-row v-show="showMode.isGallery" class="mt-0">
+                    <v-row v-show="showMode.isGallery" class="mt-1" >
                         <v-col v-for="(cat, index) in cats" :key="cat.id" cols="4" sm="3" md="2" class="pa-0">
                             <v-img
                             :src="cat.image_url"
                             @click="showImg(index)"
                             aspect-ratio="1"
                             cover
+                            style="margin: 1px;"
                             class="bg-grey-lighten-2 cursor-pointer">
                          
                                 <template v-slot:placeholder>
@@ -160,6 +155,7 @@
             rounded="0"
             @hide="hideImg"></VueEasyLightbox>
 </template>
+
 
 <script setup lang="ts">
 import {ref, onMounted,computed} from 'vue'
