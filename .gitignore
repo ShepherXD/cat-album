@@ -378,3 +378,4 @@ docs/_book
 
 cat-img
 *.db
+.code-workspace
