@@ -77,6 +77,18 @@ def store_image(file: bytes, filename:str) -> str:
     public_domain = os.getenv("AWS_PUBLIC_DOMAIN")
     return f"{public_domain}/{filename}"
 
+def delete_image(image_url:str) -> bool:
+    if os.getenv("AWS_PUBLIC_DOMAIN") not in image_url:
+        print(f"Image URL does not belong to current S3 bucket: ")
+        return False
+    filename = image_url.split("/")[-1]
+    s3.delete_object(
+        Bucket=os.getenv("AWS_BUCKET_NAME"),
+        Key=filename,
+    )
+    return True
+    
+
 
 @app.put("/cat", response_model=Cat)
 async def add_cat(
@@ -143,6 +155,8 @@ def delete_cat(cat_id: int) -> str:
         cat = session.get(Cat, cat_id)
         if not cat:
             raise HTTPException(status_code=404, detail="Cat not found")
+        image_url = cat.image_url
+        delete_image(image_url)
         
         session.delete(cat)
         session.commit()
