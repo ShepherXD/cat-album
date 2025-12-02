@@ -302,10 +302,32 @@ const removeFile = () => {
 
 }
 
+let themeColor = ref<string>('#000000')
+
 onUnmounted(() => {
     if (currentController) currentController.abort()
     // if (pollingTimer) clearInterval(pollingTimer)
+    updateThemeColor(themeColor.value)
 })
+onMounted(() => {
+    themeColor.value = getThemeColor()
+    console.log('Stored theme color:', themeColor.value)
+    updateThemeColor('#000000')
+    
+})
+const updateThemeColor = (color: string) => {
+    const meta = document.querySelector('meta[name="theme-color"]')
+    if (meta) {
+        meta.setAttribute('content', color)
+    }
+}
+const getThemeColor = () => {
+    const meta = document.querySelector('meta[name="theme-color"]')
+    if (meta) {
+        return meta.getAttribute('content')
+    }
+    return '#FFFFFF'
+}
 
 </script>
 <style scoped>
