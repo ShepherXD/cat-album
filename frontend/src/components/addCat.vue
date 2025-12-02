@@ -47,7 +47,7 @@
       </v-btn>
 
       <div class="d-flex justify-center" style="flex: 1">
-        <v-btn icon="mdi-close" size="x-large" variant="text" color="white" @click="onCustomClick"></v-btn>
+        <v-btn icon="mdi-close" size="x-large" variant="text" color="white" @click="removeFile"></v-btn>
         <v-btn icon="mdi-pencil" @click="openEdit=true" variant="text" size="x-large" color="white"></v-btn>
       </div>
 
@@ -129,6 +129,7 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const cameraInput = ref<HTMLInputElement | null>(null)
 let currentController: AbortController | null = null 
 let pollingTimer = null
+let currCatId = ref<number | null>(null)
 
 onMounted (() => {
     putCat()
@@ -160,6 +161,7 @@ const putCat = () => {
     }).then(function(res){
         console.log(res.data)
         const taskid = res.data.analysis_task_id
+        currCatId.value = res.data.id
         if(taskid){
           polling(taskid)
         }
@@ -271,8 +273,33 @@ const onFileSelected = (e: any) => {
     
 }
 
-const onCustomClick = () => {
-  // custom function
+const removeFile = () => {
+  // delete cat image from server via DELETE /cat API
+  // then back to previous page
+  if (pollingTimer) {
+      clearInterval(pollingTimer)
+      pollingTimer = null
+  }
+  if (currentController) {
+      currentController.abort()
+  }
+  if (isLoading.value) {
+      isLoading.value = false
+  }
+  if (currCatId.value)
+  {
+    axios.delete(`api/cat/${currCatId.value}`)
+          .then(function(res){
+              console.log('Delete temp cat image success')
+              goBack()
+          }).catch(function(error){
+              console.log('Delete temp cat image failed')
+              goBack()
+        })
+  }
+
+
+
 }
 
 onUnmounted(() => {
