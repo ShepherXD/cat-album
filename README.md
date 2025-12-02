@@ -3,7 +3,8 @@ A web application built with Vue.js and FastAPI to show cat images with LLM-base
 
 ## Demo
 ### https://cat-album.shepherxd.net  
-<img width="759" height="547" alt="demo" src="https://github.com/user-attachments/assets/9180e8d4-1b77-4373-a79a-484bd720cde1" />
+<img width="2277" height="1641" alt="demo" src="https://github.com/user-attachments/assets/83eaeaa4-f5f0-4287-86a6-e1285d4c7095" />
+
 
 ## Quick Start
 ### 1. Apply a Gemini API KEY from Google AI Studio (Free)
