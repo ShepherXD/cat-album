@@ -2,13 +2,14 @@
 A web application built with Vue.js and FastAPI to show cat images with LLM-based classification technique on cat breeds. 
 
 ## Demo
-https://cat-album.shepherxd.net
+### https://cat-album.shepherxd.net  
+<img width="759" height="547" alt="demo" src="https://github.com/user-attachments/assets/9180e8d4-1b77-4373-a79a-484bd720cde1" />
 
 ## Quick Start
 ### 1. Apply a Gemini API KEY from Google AI Studio (Free)
 https://ai.google.dev/gemini-api/docs/api-key#api-keys
 ### 2. Setup an AWS-compatible Object Storage Service, E.g. Cloud Flare (Free) 
-https://www.cloudflare.com/developer-platform/products/r2/
+https://www.cloudflare.com/developer-platform/products/r2/   
 Ensure that you have already allow public domain access
 ### 3. Setup .env and Run Docker
 ```
