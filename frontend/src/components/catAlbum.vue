@@ -68,7 +68,7 @@
                             <v-card-text class="pa-2 d-flex align-center text-caption text-grey-darken-1">
                             <v-icon size="x-small" color="grey" class="mr-1" icon="md:pets"></v-icon>
                                 <span class="text-truncate">
-                                    {{ cat.remark }}
+                                    {{ cat.remark || '\u00A0' }}
                                 </span>
                             </v-card-text>
 
