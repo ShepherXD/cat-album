@@ -58,13 +58,14 @@
       <ModifyCatInfo
         :initial-cat="currCat"
         :mode="'Add'"
+        :isAnalysing="isLoading"
         @delete="deleteInfo"
         @submit="(addedCat)=>save(addedCat)"
         @close="isEditOpened=false"/>  <!--sumbit info even when user click 'close' (by accident)-->
     </v-bottom-sheet>
     <!-- go back dialog -->
-    <v-dialog v-model="isBackDialogOpened">
-      <v-card prepend-icon="mdi-update" max-width="400" class=""
+    <v-dialog v-model="isBackDialogOpened" max-width="400">
+      <v-card prepend-icon="mdi-update" class=""
         text="Analysis of cat's breed is in progress.
         Your image will still be saved but may not get result."
         title="Are you sure to go back?">
@@ -81,8 +82,8 @@
     </v-card>
     </v-dialog>
     <!-- retry dialog -->
-    <v-dialog v-model="isRetryDialogOpened">
-      <v-card prepend-icon="mdi-alert-circle-outline" max-width="400" class=""
+    <v-dialog v-model="isRetryDialogOpened" max-width="400" >
+      <v-card prepend-icon="mdi-alert-circle-outline" class=""
         title="Analysis Failed">
         <v-card-text>
           {{ retryText }}

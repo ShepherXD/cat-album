@@ -129,8 +129,8 @@
                         </v-speed-dial>
             </v-fab>
             <!-- delete dialog -->
-            <v-dialog v-model="isDialogOpened">
-                <v-card prepend-icon="mdi-alert-circle-outline" max-width="400" class=""
+            <v-dialog v-model="isDialogOpened" max-width="400" >
+                <v-card prepend-icon="mdi-alert-circle-outline" class=""
                     title="Are you sure to delete?">
                     <v-card-text>
                         This operation cannot be undone.
