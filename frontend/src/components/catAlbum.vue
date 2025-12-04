@@ -136,13 +136,15 @@
                         This operation cannot be undone.
                     </v-card-text>
                     <template v-slot:actions>
-                    <v-btn @click="yes" variant="text" color="red-lighten-2">
-                        Delete
-                    </v-btn>
+                        <div class="d-flex w-100">
+                            <v-btn @click="no" variant="text" class="w-50">
+                                Cancel
+                            </v-btn>
+                            <v-btn @click="yes" variant="tonal" color="red-lighten-2" class="w-50">
+                                Delete
+                            </v-btn>
+                        </div>
 
-                    <v-btn @click="no" class="flex-grow-1" variant="tonal" color="teal-lighten-2">
-                        Cancel
-                    </v-btn>
                     </template>
                 </v-card>
             </v-dialog>

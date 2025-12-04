@@ -1,5 +1,5 @@
 <template>
-  <!-- <v-app-bar v-if="!openEdit" color="transparent" elevation="0" absolute>
+  <!-- <v-app-bar v-if="!isEditOpened" color="transparent" elevation="0" absolute>
       <template v-slot:prepend>
         <v-btn icon="mdi-arrow-left" variant="tonal" color="white" class="bg-black-alpha" @click="goBack"></v-btn>
       </template>
@@ -15,7 +15,7 @@
         @click="goBack"
     ></v-btn>
     <div class="flex-grow-1 d-flex align-center overflow-hidden justify-center w-100 position-relative"
-        :class="{'lifted':openEdit}">
+        :class="{'lifted':isEditOpened}">
         <v-progress-linear :active="isLoading" :indeterminate="isLoading" 
                             color="cyan-darken-1" height="6" absolute location="top" ></v-progress-linear>
         <v-img :src="tempUploadStore.preview" width="100%" @click="visible=true">
@@ -27,7 +27,7 @@
             </div>
         </v-img>
                 
-        <!-- <v-snackbar v-model="openSnackBar"   color="teal" rounded="pill" min-width="auto" max-width="80vw" absolute location="top">
+        <!-- <v-snackbar v-model="isSnackBarOpened"   color="teal" rounded="pill" min-width="auto" max-width="80vw" absolute location="top">
           <strong class="text-truncate">Cat's Breed: {{ currCat.breed }}</strong>
         </v-snackbar> -->
          
@@ -36,7 +36,7 @@
     <input type="file" ref="fileInput" accept="image/*"  style="display: none"  @change="onFileSelected">
     <input type="file" ref="cameraInput" accept="image/*" capture="environment" style="display: none"  @change="onFileSelected">
 
-    <div class="d-flex align-center w-100 pb-10 pt-4 flex-shrink-0" v-if="!openEdit">
+    <div class="d-flex align-center w-100 pb-10 pt-4 flex-shrink-0" v-if="!isEditOpened">
         
       <div class="d-flex justify-center" style="flex: 1"> 
         <v-btn icon="mdi-replay" @click="opencamera" size="x-large" variant="text" color="white"></v-btn>
@@ -48,13 +48,13 @@
 
       <div class="d-flex justify-center" style="flex: 1">
         <v-btn icon="mdi-close" size="x-large" variant="text" color="white" @click="removeFile"></v-btn>
-        <v-btn icon="mdi-pencil" @click="openEdit=true" variant="text" size="x-large" color="white"></v-btn>
+        <v-btn icon="mdi-pencil" @click="isEditOpened=true" variant="text" size="x-large" color="white"></v-btn>
       </div>
 
     </div> 
 
 
-    <v-bottom-sheet v-model="openEdit" rounded="0" min-height="50vh" class="overflow-hidden">
+    <v-bottom-sheet v-model="isEditOpened" rounded="0" min-height="50vh" class="overflow-hidden">
       <ModifyCatInfo
         :initial-cat="currCat"
         :mode="'Add'"
@@ -63,7 +63,7 @@
         @close="(currCat)=>save(currCat)"/>  <!--sumbit info even when user click 'close' (by accident)-->
     </v-bottom-sheet>
     <!-- go back dialog -->
-    <v-dialog v-model="openBackDialog">
+    <v-dialog v-model="isBackDialogOpened">
       <v-card prepend-icon="mdi-update" max-width="400" class=""
         text="Analysis of cat's breed is in progress.
         Your image will still be saved but may not get result."
@@ -74,21 +74,21 @@
             Go Back
           </v-btn>
 
-          <v-btn @click="openBackDialog = false" class="flex-grow-1" color="primary" variant="tonal">
+          <v-btn @click="isBackDialogOpened = false" class="flex-grow-1" color="primary" variant="tonal">
             Stay
           </v-btn>
         </template>
     </v-card>
     </v-dialog>
     <!-- retry dialog -->
-    <v-dialog v-model="openRetryDialog">
+    <v-dialog v-model="isRetryDialogOpened">
       <v-card prepend-icon="mdi-alert-circle-outline" max-width="400" class=""
         title="Analysis Failed">
         <v-card-text>
           {{ retryText }}
         </v-card-text>
         <template v-slot:actions>
-          <v-btn @click="openRetryDialog=false" variant="text">
+          <v-btn @click="isRetryDialogOpened=false" variant="text">
             Cancel
           </v-btn>
 
@@ -115,21 +115,20 @@ import { tempUploadStore, setTempFile, clearTempFile } from '@/store/store'
 import VueEasyLightbox from 'vue-easy-lightbox'
 
 const router = useRouter()
-const openEdit = ref<Boolean>(false)
-const openBackDialog = ref<Boolean>(false)
-const openRetryDialog = ref<Boolean>(false)
+const isEditOpened = ref<Boolean>(false)
+const isBackDialogOpened = ref<Boolean>(false)
+const isRetryDialogOpened = ref<Boolean>(false)
 const currCat = ref<Cat>({})
 const mode = ref('Add')
 const retryText = ref<String>(null)
 const isLoading = ref<Boolean>(false)
 const showChip = ref<Boolean>(true)
-const openSnackBar = ref<Boolean>(false)
+const isSnackBarOpened = ref<Boolean>(false)
 const visible = ref<Boolean>(false)  //whole picture
 const fileInput = ref<HTMLInputElement | null>(null)
 const cameraInput = ref<HTMLInputElement | null>(null)
 let currentController: AbortController | null = null 
 let pollingTimer = null
-let currCatId = ref<number | null>(null)
 
 onMounted (() => {
     putCat()
@@ -161,7 +160,7 @@ const putCat = () => {
     }).then(function(res){
         console.log(res.data)
         const taskid = res.data.analysis_task_id
-        currCatId.value = res.data.id
+        currCat.value.id = res.data.id
         if(taskid){
           polling(taskid)
         }
@@ -192,13 +191,13 @@ const polling = (id:number) => {
         }
         console.log(currCat.value.breed)
         isLoading.value = false
-        openSnackBar.value = true
+        isSnackBarOpened.value = true
         clearInterval(pollingTimer)
         pollingTimer = null
 
         if(currCat.value.breed === 'No Cat'){
           retryText.value = 'There is no cat in the photo. Please upload another cat photo and retry.'
-          openRetryDialog.value = true
+          isRetryDialogOpened.value = true
         }
 
       } else if(status === 'FAILED'){
@@ -208,7 +207,7 @@ const polling = (id:number) => {
         currCat.value.breed = 'Analysis Failed'
         //should open dialog and let user retry
         retryText.value = "Gemini API is overloaded. Please try again."
-        openRetryDialog.value = true
+        isRetryDialogOpened.value = true
         pollingTimer = null
       }
     })
@@ -217,12 +216,12 @@ const polling = (id:number) => {
 
 const checkStatus = () => {
   if (isLoading.value === true){
-    openBackDialog.value = true
-    console.log(openBackDialog.value)
+    isBackDialogOpened.value = true
+    console.log(isBackDialogOpened.value)
 
   } else {
     console.log(isLoading.value)
-    console.log(openBackDialog.value)
+    console.log(isBackDialogOpened.value)
     goBack()
   }
 }
@@ -235,9 +234,15 @@ const goBack = () => {
 //NOTE：run save() nomatter click 'cancel' or 'submit'
 const save = (currCat: Cat, index) => {
     const newCat = currCat
-    console.log(newCat)
-    console.log('Save Success!')
-    openEdit.value = false
+    isEditOpened.value = false
+    const formData = new FormData()
+    formData.append('name', newCat.name||"")
+    // formData.append('breed', newCat.breed||"")
+    formData.append('remark', newCat.remark||"")
+    axios.patch(`api/cat/${newCat.id}`,formData,{
+    }).then(function(res){
+        console.log('Add Success!,', res.data)
+    })
     // clearTempFile()
     // router.back()
 }
@@ -248,10 +253,10 @@ const hideChip = () => {
 const retry = (txt: string) => {
     if (txt.match(/overloaded/)) {
       putCat()
-      openRetryDialog.value = false
+      isRetryDialogOpened.value = false
 
     } else if (txt.match(/no cat/)) {
-      openRetryDialog.value = false
+      isRetryDialogOpened.value = false
       fileInput.value.click()     // openFile(from gallery or take a photo)
       currCat.value.breed = 'Waiting for cat photo...'
     }
@@ -286,9 +291,9 @@ const removeFile = () => {
   if (isLoading.value) {
       isLoading.value = false
   }
-  if (currCatId.value)
+  if (currCat.value.id)
   {
-    axios.delete(`api/cat/${currCatId.value}`)
+    axios.delete(`api/cat/${currCat.value.id}`)
           .then(function(res){
               console.log('Delete temp cat image success')
               goBack()
