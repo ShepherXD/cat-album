@@ -66,9 +66,16 @@ console.log('your cat:', props.initialCat)
 const emit = defineEmits(['close','submit','delete'])
 const currCat = ref<Cat | undefined>({})
 watch(() => props.initialCat, (newVal) => {
-    if(newVal){
+    if(props.mode === 'Edit'){
+        if(newVal){
         currCat.value = JSON.parse(JSON.stringify(newVal))
+    }}else if (props.mode === 'Add'){
+        if (newVal.id) currCat.value.id = newVal.id
+        if (newVal.name) currCat.value.name = newVal.name
+        if (newVal.breed) currCat.value.breed = newVal.breed
+        if (newVal.remark) currCat.value.remark = newVal.remark
     }
+
 }, { immediate: true, deep: true }) //← run when the component is created
 
 const confirm = () => {

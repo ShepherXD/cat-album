@@ -59,8 +59,8 @@
         :initial-cat="currCat"
         :mode="'Add'"
         @delete="deleteInfo"
-        @submit="(currCat)=>save(currCat)"
-        @close="(currCat)=>save(currCat)"/>  <!--sumbit info even when user click 'close' (by accident)-->
+        @submit="(addedCat)=>save(addedCat)"
+        @close="isEditOpened=false"/>  <!--sumbit info even when user click 'close' (by accident)-->
     </v-bottom-sheet>
     <!-- go back dialog -->
     <v-dialog v-model="isBackDialogOpened">
@@ -232,14 +232,14 @@ const goBack = () => {
 }
 
 //NOTE：run save() nomatter click 'cancel' or 'submit'
-const save = (currCat: Cat, index) => {
-    const newCat = currCat
+const save = (addedCat: Cat, index) => {
     isEditOpened.value = false
+    currCat.value = addedCat
     const formData = new FormData()
-    formData.append('name', newCat.name||"")
+    formData.append('name', currCat.value.name||"")
     // formData.append('breed', newCat.breed||"")
-    formData.append('remark', newCat.remark||"")
-    axios.patch(`api/cat/${newCat.id}`,formData,{
+    formData.append('remark', currCat.value.remark||"")
+    axios.patch(`api/cat/${currCat.value.id}`,formData,{
     }).then(function(res){
         console.log('Add Success!,', res.data)
     })
