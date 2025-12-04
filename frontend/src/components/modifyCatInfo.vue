@@ -29,6 +29,7 @@
                                             placeholder="Cat's breed"
                                             prepend-inner-icon="mdi-paw"
                                             variant="outlined"
+                                            :disabled="isAnalysing"
                                         ></v-text-field>
 
                                         <div class="text-subtitle-1 text-medium-emphasis">Remark</div>
@@ -61,10 +62,11 @@ import type { Cat } from './catAlbum.vue'
 const props = defineProps<{
     initialCat: Cat | null
     mode: string
+    isAnalysing?: Boolean
 }>()
 console.log('your cat:', props.initialCat)
 const emit = defineEmits(['close','submit','delete'])
-const currCat = ref<Cat | undefined>({})
+const currCat = ref<Cat>({})
 watch(() => props.initialCat, (newVal) => {
     if(props.mode === 'Edit'){
         if(newVal){
@@ -77,6 +79,13 @@ watch(() => props.initialCat, (newVal) => {
     }
 
 }, { immediate: true, deep: true }) //← run when the component is created
+
+// if props.disableBreedEdit is turned into disable, then clear breed field
+watch(() => props.isAnalysing, (newVal) => {
+    if(newVal){
+        currCat.value.breed = "Analysing..."
+    }
+}, { immediate: true })
 
 const confirm = () => {
     emit('submit', currCat.value)

@@ -238,7 +238,7 @@ const save = (addedCat: Cat, index) => {
     currCat.value = addedCat
     const formData = new FormData()
     formData.append('name', currCat.value.name||"")
-    // formData.append('breed', newCat.breed||"")
+    formData.append('breed', currCat.value.breed||"")
     formData.append('remark', currCat.value.remark||"")
     axios.patch(`api/cat/${currCat.value.id}`,formData,{
     }).then(function(res){
